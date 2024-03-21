@@ -72,10 +72,24 @@ const Register = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [usernameErrorMessage, setUsernameErrorMessage] = useState("");
+  const [passwordErrorMessage, setPassErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
   const [emailState, setEmailState] = useState("default");
+  const [passwordState, setPasswordState] = useState("default");
   const [usernameState, setUsernameState] = useState("default");
+
+  const validateEmail = (email) => {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    setEmailState(emailPattern.test(email) ? "valid" : "invalid");
+    setEmailErrorMessage(emailPattern.test(email) ? "" : "Имэйл буруу байна  ");
+  };
+
+  const validatePassword = (password) => {
+    setPasswordState(password.length >= 8 ? "valid" : "invalid");
+    setPassErrorMessage(
+      password.length >= 8 ? "" : "Нууц үг 8 дээш урттай байна "
+    );
+  };
 
   const register = () => {
     let user = {
@@ -126,12 +140,16 @@ const Register = ({ navigation }) => {
             placeholderTextColor={Colors.DEFAULT_GREY}
             selectionColor={Colors.DEFAULT_GREY}
             style={styles.inputText}
-            onChangeText={(text) => setUsername(text)}
+            onChangeText={(text) => {
+              setUsername(text);
+              setUsernameState(text ? "valid" : "invalid");
+            }}
           />
           {showMarker(usernameState)}
         </View>
       </View>
-      <Text style={styles.errorMessage}>{usernameErrorMessage}</Text>
+      <Text style={styles.errorMessage}></Text>
+
       <View style={inputStyle(emailState)}>
         <View style={styles.inputSubContainer}>
           <Feather
@@ -145,13 +163,17 @@ const Register = ({ navigation }) => {
             placeholderTextColor={Colors.DEFAULT_GREY}
             selectionColor={Colors.DEFAULT_GREY}
             style={styles.inputText}
-            onChangeText={(text) => setEmail(text)}
+            onChangeText={(text) => {
+              setEmail(text);
+              validateEmail(text);
+            }}
           />
           {showMarker(emailState)}
         </View>
       </View>
       <Text style={styles.errorMessage}>{emailErrorMessage}</Text>
-      <View style={styles.inputContainer}>
+
+      <View style={styles.inputContainer && inputStyle(passwordState)}>
         <View style={styles.inputSubContainer}>
           <Feather
             name="lock"
@@ -165,7 +187,10 @@ const Register = ({ navigation }) => {
             placeholderTextColor={Colors.DEFAULT_GREY}
             selectionColor={Colors.DEFAULT_GREY}
             style={styles.inputText}
-            onChangeText={(text) => setPassword(text)}
+            onChangeText={(text) => {
+              setPassword(text);
+              validatePassword(text);
+            }}
           />
           <Feather
             name={isPasswordShow ? "eye" : "eye-off"}
@@ -176,11 +201,14 @@ const Register = ({ navigation }) => {
           />
         </View>
       </View>
+      <Text style={styles.errorMessage}>{passwordErrorMessage}</Text>
       <Text style={styles.errorMessage}>{errorMessage}</Text>
+
       <TouchableOpacity style={styles.signinButton} onPress={() => register()}>
         {isLoading ? (
           <LottieView
-            source={require("../assets/animation/welcome.json")}
+            style={styles.animation}
+            source={require("../assets/animation/loading.json")}
             autoPlay
           />
         ) : (
@@ -335,6 +363,10 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.POPPINS_MEDIUM,
     marginHorizontal: 20,
     marginVertical: 3,
+  },
+  animation: {
+    width: setWidth(40),
+    height: setHeight(20),
   },
 });
 
