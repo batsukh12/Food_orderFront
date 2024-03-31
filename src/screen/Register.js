@@ -71,6 +71,8 @@ const Register = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const [success, setSucccesss] = useState("");
+
   const [isLoading, setIsLoading] = useState(false);
   const [passwordErrorMessage, setPassErrorMessage] = useState("");
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
@@ -104,6 +106,9 @@ const Register = ({ navigation }) => {
       if (!response?.status) {
         setErrorMessage(response?.message);
       }
+      if (response?.status) {
+        setSucccesss(response?.message);
+      }
     });
   };
 
@@ -124,9 +129,7 @@ const Register = ({ navigation }) => {
         <Text style={styles.headerTitle}>Бүртгүүлэх </Text>
       </View>
       <Text style={styles.title}>Шинэ хэрэглэгч </Text>
-      <Text style={styles.content}>
-        Өөрийн бүртгэлийг үүсгэн үү. Цаашид энэхүү мэдээллээр системд нэвтэрнэ.
-      </Text>
+      <Text style={styles.content}></Text>
       <View style={inputStyle(usernameState)}>
         <View style={styles.inputSubContainer}>
           <Feather
@@ -202,7 +205,11 @@ const Register = ({ navigation }) => {
         </View>
       </View>
       <Text style={styles.errorMessage}>{passwordErrorMessage}</Text>
-      <Text style={styles.errorMessage}>{errorMessage}</Text>
+      {success ? (
+        <Text style={styles.successMsg}>{success}</Text>
+      ) : (
+        <Text style={styles.errorMessage}>{errorMessage}</Text>
+      )}
 
       <TouchableOpacity style={styles.signinButton} onPress={() => register()}>
         {isLoading ? (
@@ -360,6 +367,14 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 10 * 1.4,
     color: Colors.DEFAULT_RED,
+    fontFamily: Fonts.POPPINS_MEDIUM,
+    marginHorizontal: 20,
+    marginVertical: 3,
+  },
+  successMsg: {
+    fontSize: 12,
+    lineHeight: 10 * 1.4,
+    color: Colors.DEFAULT_GREEN,
     fontFamily: Fonts.POPPINS_MEDIUM,
     marginHorizontal: 20,
     marginVertical: 3,

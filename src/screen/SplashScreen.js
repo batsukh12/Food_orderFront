@@ -7,7 +7,7 @@ import {
   Image,
   Dimensions,
 } from "react-native";
-import { Colors } from "../const";
+import { Colors, Fonts } from "../const";
 import LottieView from "lottie-react-native";
 
 const { height, width } = Dimensions.get("window");
@@ -19,6 +19,7 @@ const SplashScreen = ({ navigation }) => {
       navigation.navigate("Welcome");
     }, 3000);
   });
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -33,7 +34,7 @@ const SplashScreen = ({ navigation }) => {
         autoPlay
         loop
       />
-      <Text style={styles.titleText}>Dady uuu</Text>
+      <Text style={styles.titleText}>Delicious</Text>
     </View>
   );
 };
@@ -52,7 +53,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: Colors.DEFAULT_YELLOW,
     fontSize: 32,
-    // fontFamily: Fonts.POPPINS_LIGHT,
+    fontFamily: Fonts.POPPINS_LIGHT,
   },
   animation: {
     width: setWidth(60),

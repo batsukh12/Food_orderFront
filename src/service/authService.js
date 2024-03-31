@@ -1,9 +1,8 @@
 import axios from "axios";
-import backend_api from "../config";
+import ApiConfig from "../config";
 const AuthRequest = axios.create({
-  baseURL: backend_api.baseUrl,
+  baseURL: ApiConfig.backend_api.baseUrl,
 });
-
 const Register = async (user) => {
   if (!user.username || !user?.email || !user.password) {
     return { status: false, message: "Бүх талбарыг бөглөн үү. " };
@@ -15,7 +14,10 @@ const Register = async (user) => {
       password: user.password,
     };
 
-    let response = await AuthRequest.post(backend_api.Register, reqBody);
+    let response = await AuthRequest.post(
+      ApiConfig.backend_api.Register,
+      reqBody
+    );
     return response?.data;
   } catch (err) {
     console.log(err);
@@ -32,7 +34,7 @@ const Login = async (user) => {
       password: user.password,
     };
 
-    let response = await AuthRequest.post(backend_api.Login, reqBody);
+    let response = await AuthRequest.post(ApiConfig.backend_api.Login, reqBody);
     return response?.data;
   } catch (err) {
     console.log(err);

@@ -1,17 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "./src/screen/SplashScreen";
 import WelcomeScreen from "./src/screen/WelcomeScreen";
 import SignScreen from "./src/screen/SignScreen";
-import { SafeAreaView } from "react-native"; // Import SafeAreaView
+import { SafeAreaView } from "react-native";
 import Register from "./src/screen/Register";
 import ForgotPasswordScreen from "./src/screen/ForgotPassScreen";
 import HomeScreen from "./src/screen/HomeScreen";
+import { useSelector, useDispatch } from "react-redux";
+import { GeneralAction } from "./src/actions";
 
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
+  const { isLoading, token, isFirst } = useSelector(
+    (state) => state?.generalState
+  );
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    // Dispatch the action only when the component mounts
+    dispatch(GeneralAction.appStart());
+  }, [dispatch]);
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -19,15 +30,27 @@ const Navigation = () => {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Home" component={SplashScreen}></Stack.Screen>
-        <Stack.Screen name="Welcome" component={WelcomeScreen}></Stack.Screen>
-        <Stack.Screen name="SignIn" component={SignScreen}></Stack.Screen>
-        <Stack.Screen name="Register" component={Register}></Stack.Screen>
-        <Stack.Screen
-          name="ForgotPass"
-          component={ForgotPasswordScreen}
-        ></Stack.Screen>
-        <Stack.Screen name="HomeScreen" component={HomeScreen}></Stack.Screen>
+        <Stack.Screen name="Home" component={SplashScreen} />
+        <Stack.Screen name="Welcome" component={WelcomeScreen} />
+        <Stack.Screen name="SignIn" component={SignScreen} />
+        <Stack.Screen name="Register" component={Register} />
+        <Stack.Screen name="ForgotPass" component={ForgotPasswordScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+
+        {/* {isLoading ? (
+          <Stack.Screen name="Home" component={SplashScreen} />
+        ) : !token ? (
+          <>
+            {isFirst && (
+              <Stack.Screen name="Welcome" component={WelcomeScreen} />
+            )}
+            <Stack.Screen name="SignIn" component={SignScreen} />
+            <Stack.Screen name="Register" component={Register} />
+            <Stack.Screen name="ForgotPass" component={ForgotPasswordScreen} />
+          </>
+        ) : (
+          <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        )} */}
       </Stack.Navigator>
     </NavigationContainer>
   );

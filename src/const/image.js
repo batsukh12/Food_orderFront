@@ -1,8 +1,15 @@
 export default {
-  test: require("../assets/images/favicon.png"),
   facebook: require("../assets/images/facebook.png"),
   google: require("../assets/images/google.png"),
   wel1: require("../assets/images/welcome1.png"),
   welcome2: require("../assets/images/welcome2.png"),
   welcome3: require("../assets/images/welcome3.png"),
+  DELIVERY_TIME: require("../assets/images/delivery_time.png"),
+  DELIVERY_CHARGE: require("../assets/images/delivery_charge.png"),
+  burger: require("../assets/images/burger.png"),
+  chicken: require("../assets/images/fried-chicken.png"),
+  pizza: require("../assets/images/pizza.png"),
+  dessert: require("../assets/images/dessert.png"),
+  noodle: require("../assets/images/noodles.png"),
+  drinks: require("../assets/images/drinks.png"),
 };

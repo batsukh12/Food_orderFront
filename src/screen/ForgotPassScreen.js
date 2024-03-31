@@ -34,9 +34,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
         <Text style={styles.headerTitle}>Нууц үг </Text>
       </View>
       <Text style={styles.title}>Нууц үг сэргээх </Text>
-      <Text style={styles.content}>
-        Enter your email, so that we can help you to recover your password.
-      </Text>
+      <Text style={styles.content}></Text>
       <View style={styles.inputContainer}>
         <View style={styles.inputSubContainer}>
           <Feather

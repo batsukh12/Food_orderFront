@@ -11,7 +11,9 @@ import {
 } from "react-native";
 import { Separator, WelcomeCard } from "../component";
 import { Colors } from "../const";
-
+import { StorageService } from "../service";
+import { useDispatch } from "react-redux";
+import { GeneralAction } from "../actions";
 const welcome_content = [
   {
     img: "wel1",
@@ -60,7 +62,13 @@ const WelcomeScreen = ({ navigation }) => {
       index: welcomeListIndex < 2 ? welcomeListIndex + 1 : welcomeListIndex,
     });
   };
-
+  const dispatch = useDispatch();
+  const navigate = () => {
+    StorageService.setFirstUse().then(() => {
+      dispatch(GeneralAction.setFirstUse());
+    });
+    navigation.navigate("SignIn");
+  };
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="dark-content" translucent />
@@ -83,7 +91,7 @@ const WelcomeScreen = ({ navigation }) => {
           <TouchableOpacity
             style={styles.startBtn}
             activeOpacity={0.8}
-            onPress={() => navigation.navigate("SignIn")}
+            onPress={() => navigate()}
           >
             <Text style={styles.startBtnText}>Get Start</Text>
           </TouchableOpacity>

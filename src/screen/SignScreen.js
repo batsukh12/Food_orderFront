@@ -14,7 +14,10 @@ import Ionicons from "react-native-vector-icons/Ionicons";
 import Feather from "react-native-vector-icons/Feather";
 import { Colors, Fonts, image } from "../const";
 import LottieView from "lottie-react-native";
-import { authService } from "../service";
+import { StorageService, authService } from "../service";
+import { connect } from "react-redux";
+import { GeneralAction } from "../actions";
+import { useDispatch } from "react-redux";
 
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
@@ -25,7 +28,7 @@ const SigninScreen = ({ navigation }) => {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
+  const dispatch = useDispatch();
   const signIn = () => {
     let user = {
       email,
@@ -33,13 +36,16 @@ const SigninScreen = ({ navigation }) => {
     };
     authService.Login(user).then((response) => {
       setIsLoading(false);
-      console.log(response);
       if (!response?.status) {
         setErrorMessage(response?.message);
       }
       if (response?.status) {
+        StorageService.setToken(response?.data).then(() => {
+          dispatch(GeneralAction.setToken(response?.data));
+        });
         navigation.navigate("HomeScreen");
       }
+      console.log("token :" + response?.data);
     });
   };
   return (
@@ -59,7 +65,7 @@ const SigninScreen = ({ navigation }) => {
         <Text style={styles.headerTitle}>Нэвтрэх </Text>
       </View>
       <Text style={styles.title}>Тавтай морил</Text>
-      <Text style={styles.content}>Өдрийг амтархан өнгөрүүлээрэй</Text>
+      <Text style={styles.content}></Text>
       <View style={styles.inputContainer}>
         <View style={styles.inputSubContainer}>
           <Feather
