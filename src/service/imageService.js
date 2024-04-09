@@ -10,6 +10,6 @@ const getGalleryImage = (
   size,
   quality = ApiConfig.const_image.QUALITY.SD
 ) =>
-  `${ApiConfig.const_image.base_IMG_URL}}/gallery/${size}/${quality}/${imageId}.png`;
+  `${ApiConfig.const_image.base_IMG_URL}/gallery/${size}/${quality}/${imageId}.png`;
 
 export default { getLogo, getPoster, getGalleryImage };

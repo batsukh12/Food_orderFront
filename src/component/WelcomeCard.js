@@ -1,7 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, Dimensions } from "react-native";
 import { image, Fonts } from "../const";
-
 const { height, width } = Dimensions.get("window");
 
 const setHeight = (h) => (height / 100) * h;
@@ -30,13 +29,15 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Confortaa-Bold",
   },
   desc: {
     marginTop: 10,
     marginBottom: 20,
     fontSize: 18,
-    fontFamily: Fonts.POPPINS_LIGHT,
+    //fontFamily: Fonts.CONFORTAA_BOLD,
+
+    fontFamily: "Confortaa-Regular",
     textAlign: "center",
     marginHorizontal: 20,
   },

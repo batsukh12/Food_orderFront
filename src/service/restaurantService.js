@@ -37,11 +37,11 @@ const getRestaurants = async () => {
   }
 };
 
-const getOneRestaurantById = async (restaurantId) => {
+const getRestaurantById = async (restaurantId) => {
   console.log(`RestaurantsService | getOneRestaurantById`);
   try {
     let restaurantResponse = await axios.get(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Register}/${restaurantId}`,
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Restaurant}/${restaurantId}`,
       {
         headers: authHeader(getToken()),
       }
@@ -67,4 +67,4 @@ const getOneRestaurantById = async (restaurantId) => {
   }
 };
 
-export default { getRestaurants, getOneRestaurantById };
+export default { getRestaurants, getRestaurantById };

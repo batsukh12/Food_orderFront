@@ -10,7 +10,9 @@ import ForgotPasswordScreen from "./src/screen/ForgotPassScreen";
 import HomeScreen from "./src/screen/HomeScreen";
 import { useSelector, useDispatch } from "react-redux";
 import { GeneralAction } from "./src/actions";
-
+import RestaurantScreen from "./src/screen/RestaurantScreen";
+import bottomBars from "./src/component/bottomBars";
+import FoodScreen from "./src/screen/FoodScreen";
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
@@ -30,14 +32,14 @@ const Navigation = () => {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="Home" component={SplashScreen} />
+        {/* <Stack.Screen name="Home" component={SplashScreen} />
         <Stack.Screen name="Welcome" component={WelcomeScreen} />
         <Stack.Screen name="SignIn" component={SignScreen} />
         <Stack.Screen name="Register" component={Register} />
         <Stack.Screen name="ForgotPass" component={ForgotPasswordScreen} />
-        <Stack.Screen name="HomeScreen" component={HomeScreen} />
+        <Stack.Screen name="HomeScreen" component={HomeScreen} /> */}
 
-        {/* {isLoading ? (
+        {isLoading ? (
           <Stack.Screen name="Home" component={SplashScreen} />
         ) : !token ? (
           <>
@@ -49,8 +51,12 @@ const Navigation = () => {
             <Stack.Screen name="ForgotPass" component={ForgotPasswordScreen} />
           </>
         ) : (
-          <Stack.Screen name="HomeScreen" component={HomeScreen} />
-        )} */}
+          <>
+            <Stack.Screen name="bottomBars" component={bottomBars} />
+            <Stack.Screen name="Restaurant" component={RestaurantScreen} />
+            <Stack.Screen name="Food" component={FoodScreen} />
+          </>
+        )}
       </Stack.Navigator>
     </NavigationContainer>
   );

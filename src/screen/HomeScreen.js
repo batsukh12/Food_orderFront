@@ -20,6 +20,7 @@ import {
   RestaurantCard,
   FavRestaurant,
 } from "../component";
+import LottieView from "lottie-react-native";
 import { restaurantService } from "../service";
 
 const sortStyle = (isActive) =>
@@ -33,19 +34,24 @@ const setWidth = (w) => (width / 100) * w;
 const HomeScreen = ({ navigation }) => {
   const [restaurants, setRestaurants] = useState(null);
   const [activeSortItem, setActiveSortItem] = useState("recent");
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchRestaurants = useCallback(() => {
+    setIsLoading(true);
     restaurantService.getRestaurants().then((response) => {
+      setIsLoading(false);
       if (response?.status) {
         setRestaurants(response?.data);
       }
     });
-  }, [restaurantService, setRestaurants]);
+  }, []);
 
   useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", fetchRestaurants);
-    return unsubscribe;
-  }, [navigation, fetchRestaurants]);
+    fetchRestaurants();
+    // const unsubscribe = navigation.addListener("focus", fetchRestaurants);
+    // return unsubscribe;
+  }, []);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -53,108 +59,129 @@ const HomeScreen = ({ navigation }) => {
         translucent
         backgroundColor={Colors.DEFAULT_GREEN}
       />
-      <Separator height={StatusBar.currentHeight} />
-      <View style={styles.background} />
-      <View style={styles.header}>
-        <View style={styles.locationContainer}>
-          <Ionicons name="location" size={18} color={Colors.DEFAULT_BLACK} />
-          <Text style={styles.locationText}>Хүргэлтийн хаяг </Text>
-          <Text style={styles.selectedText}>Home</Text>
-          <MaterialIcons
-            name="keyboard-arrow-down"
-            size={18}
-            color={Colors.DEFAULT_BLACK}
+      {isLoading ? (
+        <View style={styles.loadingContainer}>
+          <LottieView
+            style={styles.animation}
+            source={require("../assets/animation/main_load.json")}
+            autoPlay
           />
-          <Feather
-            name="bell"
-            size={26}
-            color={Colors.DEFAULT_BLACK}
-            style={{ position: "absolute", right: 0 }}
-          />
-          <View style={styles.alertBadge}>
-            <Text style={styles.alertBadgeText}>12</Text>
-          </View>
         </View>
-        <View style={styles.searchContainer}>
-          <View style={styles.searchSections}>
-            <Feather name="search" size={25} color={Colors.DEFAULT_GREY} />
-          </View>
-          <TextInput placeholder="Хайх.." />
-        </View>
-        <ScrollView
-          showsVerticalScrollIndicator={false}
-          style={styles.categoriesContainer}
-        >
-          <Categories />
-        </ScrollView>
-        <ScrollView style={styles.listContainer}>
-          <View style={styles.horizontalListContainer}>
-            <View style={styles.listHeader}>
-              <Text style={styles.listHeaderTitle}>Онцгой </Text>
-              <Text style={styles.listHeaderSubtitle}>Бүгдийг харах </Text>
+      ) : (
+        <>
+          <Separator height={StatusBar.currentHeight} />
+          <View style={styles.background} />
+          <View style={styles.header}>
+            <View style={styles.locationContainer}>
+              <Ionicons
+                name="location"
+                size={18}
+                color={Colors.DEFAULT_BLACK}
+              />
+              <Text style={styles.locationText}>Хүргэлтийн хаяг </Text>
+              <Text style={styles.selectedText}>Home</Text>
+              <MaterialIcons
+                name="keyboard-arrow-down"
+                size={18}
+                color={Colors.DEFAULT_BLACK}
+              />
+              <Feather
+                name="bell"
+                size={26}
+                color={Colors.DEFAULT_BLACK}
+                style={{ position: "absolute", right: 0 }}
+              />
+              <View style={styles.alertBadge}>
+                <Text style={styles.alertBadgeText}>12</Text>
+              </View>
             </View>
-            <FlatList
-              data={restaurants}
-              keyExtractor={(item) => item?.id}
-              horizontal
-              ListHeaderComponent={() => <Separator width={20} />}
-              ListFooterComponent={() => <Separator width={20} />}
-              ItemSeparatorComponent={() => <Separator width={10} />}
-              renderItem={({ item }) => (
-                <RestaurantCard
-                  id={item.id}
-                  name={item.name}
-                  images={item.images}
-                  tags={item.tags}
-                  distance={item.distance}
-                  time={item.time}
+            <View style={styles.searchContainer}>
+              <View style={styles.searchSections}>
+                <Feather name="search" size={25} color={Colors.DEFAULT_GREY} />
+              </View>
+              <TextInput placeholder="Хайх.." />
+            </View>
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              style={styles.categoriesContainer}
+            >
+              <Categories />
+            </ScrollView>
+            <ScrollView style={styles.listContainer}>
+              <View style={styles.horizontalListContainer}>
+                <View style={styles.listHeader}>
+                  <Text style={styles.listHeaderTitle}>Онцгой </Text>
+                  <Text style={styles.listHeaderSubtitle}>Бүгдийг харах </Text>
+                </View>
+                <FlatList
+                  data={restaurants}
+                  keyExtractor={(item) => item?.id}
+                  horizontal
+                  ListHeaderComponent={() => <Separator width={20} />}
+                  ListFooterComponent={() => <Separator width={20} />}
+                  ItemSeparatorComponent={() => <Separator width={10} />}
+                  renderItem={({ item }) => (
+                    <RestaurantCard
+                      id={item.id}
+                      name={item.name}
+                      images={item.images}
+                      tags={item.tags}
+                      distance={item.distance}
+                      time={item.time}
+                      navigate={() =>
+                        navigation.navigate("Restaurant", {
+                          restaurantId: item.id,
+                        })
+                      }
+                    />
+                  )}
                 />
-              )}
-            />
+              </View>
+              <View style={styles.sortListContainer}>
+                <TouchableOpacity
+                  style={sortStyle(activeSortItem === "recent")}
+                  activeOpacity={0.8}
+                  onPress={() => setActiveSortItem("recent")}
+                >
+                  <Text style={styles.sortListItemText}>Recent</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={sortStyle(activeSortItem === "favorite")}
+                  activeOpacity={0.8}
+                  onPress={() => setActiveSortItem("favorite")}
+                >
+                  <Text style={styles.sortListItemText}>Favorite</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={sortStyle(activeSortItem === "rating")}
+                  activeOpacity={0.8}
+                  onPress={() => setActiveSortItem("rating")}
+                >
+                  <Text style={styles.sortListItemText}>Rating</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={sortStyle(activeSortItem === "popular")}
+                  activeOpacity={0.8}
+                  onPress={() => setActiveSortItem("popular")}
+                >
+                  <Text style={styles.sortListItemText}>Popular</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={sortStyle(activeSortItem === "trending")}
+                  activeOpacity={0.8}
+                  onPress={() => setActiveSortItem("trending")}
+                >
+                  <Text style={styles.sortListItemText}>Trending</Text>
+                </TouchableOpacity>
+              </View>
+              {restaurants?.map((item) => (
+                <FavRestaurant {...item} key={item?.id} />
+              ))}
+              <Separator height={setHeight(5)} />
+            </ScrollView>
           </View>
-          <View style={styles.sortListContainer}>
-            <TouchableOpacity
-              style={sortStyle(activeSortItem === "recent")}
-              activeOpacity={0.8}
-              onPress={() => setActiveSortItem("recent")}
-            >
-              <Text style={styles.sortListItemText}>Recent</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={sortStyle(activeSortItem === "favorite")}
-              activeOpacity={0.8}
-              onPress={() => setActiveSortItem("favorite")}
-            >
-              <Text style={styles.sortListItemText}>Favorite</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={sortStyle(activeSortItem === "rating")}
-              activeOpacity={0.8}
-              onPress={() => setActiveSortItem("rating")}
-            >
-              <Text style={styles.sortListItemText}>Rating</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={sortStyle(activeSortItem === "popular")}
-              activeOpacity={0.8}
-              onPress={() => setActiveSortItem("popular")}
-            >
-              <Text style={styles.sortListItemText}>Popular</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={sortStyle(activeSortItem === "trending")}
-              activeOpacity={0.8}
-              onPress={() => setActiveSortItem("trending")}
-            >
-              <Text style={styles.sortListItemText}>Trending</Text>
-            </TouchableOpacity>
-          </View>
-          {restaurants?.map((item) => (
-            <FavRestaurant {...item} key={item?.id} />
-          ))}
-          <Separator height={setHeight(5)} />
-        </ScrollView>
-      </View>
+        </>
+      )}
     </View>
   );
 };
@@ -174,6 +201,15 @@ const styles = StyleSheet.create({
     marginTop: 12,
     flex: 1,
     marginBottom: 70,
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  animation: {
+    width: 100,
+    height: 100,
   },
   header: {
     justifyContent: "space-evenly",
