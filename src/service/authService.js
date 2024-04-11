@@ -41,4 +41,25 @@ const Login = async (user) => {
     return { status: false, message: "Oops! something went wrong." };
   }
 };
-export default { Register, Login };
+const authHeader = (token) => {
+  return {
+    Authorization: `Bearer ${token}`,
+  };
+};
+const refreshToken = async () => {
+  try {
+    let tokenResponse = await AuthRequest.post(
+      ApiConfig.backend_api.RefreshToken,
+      { headers: authHeader(getToken()) }
+    );
+    if (tokenResponse?.status === 200) {
+      return { status: true, data: tokenResponse?.data };
+    } else {
+      return { status: false };
+    }
+  } catch (error) {
+    console.log(error);
+    return { status: false, message: "Oops! Something went wrong" };
+  }
+};
+export default { Register, Login, refreshToken };

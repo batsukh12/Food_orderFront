@@ -5,6 +5,9 @@ const backend_api = {
   Restaurant: "/restaurant",
   Cart: "/cart",
   Food: "/food",
+  Bookmark: "/bookmark",
+  User: "/user",
+  RefreshToken: "/refresh_token",
 };
 const const_image = {
   base_IMG_URL: "http://192.168.1.211:3001/images",

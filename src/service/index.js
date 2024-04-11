@@ -4,6 +4,8 @@ import restaurantService from "./restaurantService";
 import imageService from "./imageService";
 import cartService from "./cartService";
 import foodService from "./foodService";
+import bookmarkService from "./bookmarkService";
+import userService from "./userService";
 export {
   authService,
   StorageService,
@@ -11,4 +13,6 @@ export {
   imageService,
   cartService,
   foodService,
+  bookmarkService,
+  userService,
 };

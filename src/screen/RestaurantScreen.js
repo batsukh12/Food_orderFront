@@ -12,7 +12,7 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { imageService } from "../service";
-import { restaurantService } from "../service";
+import { restaurantService, bookmarkService } from "../service";
 import ApiConfig from "../config";
 import { Colors, Fonts, image } from "../const";
 import { Separator, CategoryList, FoodCard } from "../component";
@@ -85,10 +85,11 @@ const RestaurantScreen = ({
         (item) => item?.restaurantId === restaurantId
       )?.length > 0
   );
+  const userId = "12";
   const addBookmark = () =>
-    dispatch(BookmarkAction.addBookmark({ restaurantId }));
+    dispatch(bookmarkService.addbookmark({ restaurantId, userId }));
   const removeBookmark = () =>
-    dispatch(BookmarkAction.removeBookmark({ restaurantId }));
+    dispatch(bookmarkService.removeBookmark({ restaurantId, userId }));
   return (
     <View style={styles.container}>
       <StatusBar barStyle="default" translucent backgroundColor="transparent" />
