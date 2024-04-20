@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
 const setWidth = (w) => (width / 100) * w;
+
 const SigninScreen = ({ navigation }) => {
   const [isPasswordShow, setIsPasswordShow] = useState(false);
   const [email, setEmail] = useState("");
@@ -43,9 +44,11 @@ const SigninScreen = ({ navigation }) => {
         StorageService.setToken(response?.data).then(() => {
           dispatch(GeneralAction.setToken(response?.data));
         });
-        navigation.navigate("HomeScreen");
+        StorageService.setUser(response?.userId).then(() => {
+          dispatch(GeneralAction.setUserData(response?.userId));
+        });
+        //navigation.navigate("HomeScreen");
       }
-      console.log("token :" + response?.data);
     });
   };
   return (

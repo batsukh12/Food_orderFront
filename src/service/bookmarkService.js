@@ -1,11 +1,8 @@
 import axios from "axios";
 import ApiConfig from "../config";
 import { getToken } from "../Store";
-const authHeader = (token) => {
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
+
+const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
 
 const getBookmark = async (userId) => {
   console.log(`bookmark | getmark`);
@@ -72,7 +69,7 @@ const removeBookmark = async ({ restaurantId, userId }) => {
   console.log(`bookmark | removeMark`);
   try {
     let response = await axios.delete(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Cart}/${restaurantId}`,
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Bookmark}/${restaurantId}`,
       { userId }, // Include userId in the request body
 
       {

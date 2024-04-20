@@ -1,11 +1,8 @@
 import axios from "axios";
 import ApiConfig from "../config";
 import { getToken } from "../Store";
-const authHeader = (token) => {
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
+
+const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
 
 const getCartItems = async () => {
   console.log(`CartService | getCartItems`);

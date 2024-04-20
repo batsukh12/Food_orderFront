@@ -13,4 +13,18 @@ const setToken = (token) => {
 const getToken = () => {
   return AsyncStorage.getItem("token");
 };
-export default { setFirstUse, getFirstUse, setToken, getToken };
+const setUser = (userId) => {
+  return AsyncStorage.setItem("user", userId);
+};
+
+const getUser = () => {
+  return AsyncStorage.getItem("user");
+};
+export default {
+  setFirstUse,
+  getFirstUse,
+  setToken,
+  getToken,
+  setUser,
+  getUser,
+};

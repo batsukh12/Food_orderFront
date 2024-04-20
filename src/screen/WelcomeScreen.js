@@ -67,7 +67,7 @@ const WelcomeScreen = ({ navigation }) => {
     StorageService.setFirstUse().then(() => {
       dispatch(GeneralAction.setFirstUse());
     });
-    navigation.navigate("SignIn");
+    // navigation.navigate("SignIn");
   };
   return (
     <SafeAreaView style={styles.container}>

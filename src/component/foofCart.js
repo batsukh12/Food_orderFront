@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -11,28 +11,51 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { Colors, Fonts } from "../const";
 import ApiConfig from "../config";
 import { imageService } from "../service";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { cartAction } from "../actions";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StorageService } from "../service";
 
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
 const setWidth = (w) => (width / 100) * w;
 
 const FoodCard = ({ id, name, description, price, image, navigate }) => {
-  const [ites, setitems] = useState(0);
+  const [userId, setUserId] = useState(null);
 
   const dispatch = useDispatch();
+
+  const item = {
+    id: id,
+    name: name,
+    description: description,
+    price: price,
+    image: image,
+  };
+  useEffect(() => {
+    const getUserAndFetch = async () => {
+      try {
+        const user = await StorageService.getUser();
+        setUserId(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUserAndFetch();
+  }, []);
+
   const itemCount = useSelector(
     (state) =>
-      state?.cartState?.cart?.cartItems?.find((item) => item?.foodId === id)
-        ?.count
+      state?.cartState?.cart?.find((item) => item.id === id)?.count || 0
   );
-  const userId = "12";
-  const addToCart = (foodId) =>
-    dispatch(cartAction.addToCart({ foodId, userId }));
-  const removeFromCart = (foodId) =>
-    dispatch(cartAction.removeFromCart({ foodId }));
+
+  const addToCart = () => {
+    dispatch(cartAction.addToCart({ userId, item }));
+  };
+  const removeFromCart = () => {
+    dispatch(cartAction.removeFromCart({ foodId: id, userId }));
+  };
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={() => navigate()} activeOpacity={0.8}>
@@ -64,7 +87,7 @@ const FoodCard = ({ id, name, description, price, image, navigate }) => {
                   name="minus"
                   color={Colors.DEFAULT_YELLOW}
                   size={18}
-                  onPress={() => removeFromCart(id)}
+                  onPress={() => removeFromCart()}
                 />
                 <Text style={styles.itemCountText}>{itemCount}</Text>
               </>
@@ -74,7 +97,7 @@ const FoodCard = ({ id, name, description, price, image, navigate }) => {
               name="plus"
               color={Colors.DEFAULT_YELLOW}
               size={18}
-              onPress={() => addToCart(id)}
+              onPress={() => addToCart()}
             />
           </View>
         </View>

@@ -13,16 +13,16 @@ import { GeneralAction } from "./src/actions";
 import RestaurantScreen from "./src/screen/RestaurantScreen";
 import bottomBars from "./src/component/bottomBars";
 import FoodScreen from "./src/screen/FoodScreen";
+import CheckoutScreen from "./src/screen/checkoutScreen";
 const Stack = createNativeStackNavigator();
 
 const Navigation = () => {
-  const { isLoading, token, isFirst } = useSelector(
+  const { isLoading, token, isFirstUse } = useSelector(
     (state) => state?.generalState
   );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // Dispatch the action only when the component mounts
     dispatch(GeneralAction.appStart());
   }, [dispatch]);
   return (
@@ -41,9 +41,9 @@ const Navigation = () => {
 
         {isLoading ? (
           <Stack.Screen name="Home" component={SplashScreen} />
-        ) : !token ? (
+        ) : !token || token === null || token === "" ? (
           <>
-            {isFirst && (
+            {isFirstUse && (
               <Stack.Screen name="Welcome" component={WelcomeScreen} />
             )}
             <Stack.Screen name="SignIn" component={SignScreen} />
@@ -55,6 +55,7 @@ const Navigation = () => {
             <Stack.Screen name="bottomBars" component={bottomBars} />
             <Stack.Screen name="Restaurant" component={RestaurantScreen} />
             <Stack.Screen name="Food" component={FoodScreen} />
+            <Stack.Screen name="Checkout" component={CheckoutScreen} />
           </>
         )}
       </Stack.Navigator>

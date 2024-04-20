@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   View,
   Text,
@@ -14,14 +14,54 @@ import { FoodCard, Separator } from "../component";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import Entypo from "react-native-vector-icons/Entypo";
 import AntDesign from "react-native-vector-icons/AntDesign";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import LottieView from "lottie-react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
 const setWidth = (w) => (width / 100) * w;
+
 const CartScreen = ({ navigation }) => {
-  const cart = useSelector((state) => state?.cartState?.cart);
+  const [carts, setCarts] = useState([]);
+  const [totalAmount, setTotalAmount] = useState(0);
+
+  const fetchCart = useCallback(async () => {
+    try {
+      const cart = await AsyncStorage.getItem("carts");
+      if (cart) {
+        const parsedCartItems = JSON.parse(cart);
+        setCarts(parsedCartItems);
+      }
+    } catch (error) {
+      console.error("Error while fetching cart:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCart();
+  }, []);
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", () => {
+      fetchCart();
+    });
+
+    return unsubscribe;
+  }, [fetchCart]);
+  useEffect(() => {
+    // Calculate total amount based on the current state of the cart
+    const calculateTotalAmount = () => {
+      const total = carts.reduce(
+        (acc, curr) => acc + curr.price * curr.count,
+        0
+      );
+      setTotalAmount(total.toFixed(2));
+    };
+
+    // Call the function to calculate the total amount
+    calculateTotalAmount();
+  }, [carts]);
+
   return (
     <View style={styles.container}>
       <StatusBar
@@ -38,75 +78,73 @@ const CartScreen = ({ navigation }) => {
         />
         <Text style={styles.headerTitle}>My Cart</Text>
       </View>
-      {cart?.cartItems?.length > 0 ? (
-        <>
-          <ScrollView>
-            <View style={styles.foodList}>
-              {cart?.cartItems?.map((item) => (
-                <FoodCard
-                  {...item?.food}
-                  key={item?.food?.id}
-                  navigate={() =>
-                    navigation.navigate("Food", { foodId: item?.id })
-                  }
-                />
-              ))}
-            </View>
-            <View style={styles.promoCodeContainer}>
-              <View style={styles.rowAndCenter}>
-                <Entypo name="ticket" size={30} color={Colors.DEFAULT_YELLOW} />
-                <Text style={styles.promoCodeText}>Add Promo Code</Text>
-              </View>
-              <Ionicons
-                name="chevron-forward-outline"
-                size={20}
-                color={Colors.DEFAULT_BLACK}
+      {carts.length > 0 ? (
+        <ScrollView>
+          <View style={styles.foodList}>
+            {carts.map((item) => (
+              <FoodCard
+                {...item}
+                key={item.id}
+                navigate={() =>
+                  navigation.navigate("Food", { foodId: item.id })
+                }
+                onRemoveItem={() =>
+                  removeFromCart({ foodId: item.id, userId: item.userId })
+                }
               />
+            ))}
+          </View>
+          <View style={styles.promoCodeContainer}>
+            <View style={styles.rowAndCenter}>
+              <Entypo name="ticket" size={30} color={Colors.DEFAULT_YELLOW} />
+              <Text style={styles.promoCodeText}>Add Promo Code</Text>
             </View>
-            <View style={styles.amountContainer}>
-              <View style={styles.amountSubContainer}>
-                <Text style={styles.amountLabelText}>Item Total</Text>
-                <Text style={styles.amountText}>
-                  $ {cart?.metaData?.itemsTotal?.toFixed(2)}
-                </Text>
-              </View>
-              <View style={styles.amountSubContainer}>
-                <Text style={styles.amountLabelText}>Discount</Text>
-                <Text style={styles.amountText}>
-                  $ {cart?.metaData?.discount?.toFixed(2)}
-                </Text>
-              </View>
-              <View style={styles.amountSubContainer}>
-                <Text style={styles.amountLabelText}>Delivery Fee</Text>
-                <Text
-                  style={{ ...styles.amountText, color: Colors.DEFAULT_GREEN }}
-                >
-                  Free
-                </Text>
-              </View>
+            <Ionicons
+              name="chevron-forward-outline"
+              size={20}
+              color={Colors.DEFAULT_BLACK}
+            />
+          </View>
+          <View style={styles.amountContainer}>
+            <View style={styles.amountSubContainer}>
+              <Text style={styles.amountLabelText}>Item Total</Text>
+              <Text style={styles.amountText}>$ {totalAmount}</Text>
             </View>
-            <View style={styles.totalContainer}>
-              <Text style={styles.totalText}>Total</Text>
-              <Text style={styles.totalText}>
-                $ {cart?.metaData?.grandTotal?.toFixed(2)}
+            <View style={styles.amountSubContainer}>
+              <Text style={styles.amountLabelText}>Discount</Text>
+              <Text style={styles.amountText}>
+                $ 0.00 {/* Assuming no discount */}
               </Text>
             </View>
-            <TouchableOpacity style={styles.checkoutButton}>
-              <View style={styles.rowAndCenter}>
-                <Ionicons
-                  name="cart-outline"
-                  color={Colors.DEFAULT_WHITE}
-                  size={20}
-                />
-                <Text style={styles.checkoutText}>Checkout</Text>
-              </View>
-              <Text style={styles.checkoutText}>
-                $ {cart?.metaData?.grandTotal?.toFixed(2)}
+            <View style={styles.amountSubContainer}>
+              <Text style={styles.amountLabelText}>Delivery Fee</Text>
+              <Text
+                style={{ ...styles.amountText, color: Colors.DEFAULT_GREEN }}
+              >
+                Free
               </Text>
-            </TouchableOpacity>
-            <Separator height={setHeight(9)} />
-          </ScrollView>
-        </>
+            </View>
+          </View>
+          <View style={styles.totalContainer}>
+            <Text style={styles.totalText}>Total</Text>
+            <Text style={styles.totalText}>$ {totalAmount}</Text>
+          </View>
+          <TouchableOpacity
+            style={styles.checkoutButton}
+            onPress={() => navigation.navigate("Checkout")}
+          >
+            <View style={styles.rowAndCenter}>
+              <Ionicons
+                name="cart-outline"
+                color={Colors.DEFAULT_WHITE}
+                size={20}
+              />
+              <Text style={styles.checkoutText}>Checkout</Text>
+            </View>
+            <Text style={styles.checkoutText}>$ {totalAmount}</Text>
+          </TouchableOpacity>
+          <Separator height={setHeight(9)} />
+        </ScrollView>
       ) : (
         <View style={styles.emptyCartContainer}>
           <LottieView

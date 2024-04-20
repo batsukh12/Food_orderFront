@@ -2,16 +2,13 @@ import ApiConfig from "../config";
 import axios from "axios";
 import { getToken } from "../Store";
 
-const authHeader = (token) => {
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
-const getUserData = async () => {
+const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
+
+const getUserData = async (userId) => {
   console.log(`UserService | getUserData`);
   try {
     let userResponse = await axios.get(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.baseUrl.User}/getUser`,
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.User}/${userId}`,
       {
         headers: authHeader(getToken()),
       }

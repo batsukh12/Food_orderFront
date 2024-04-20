@@ -12,4 +12,9 @@ export default {
   dessert: require("../assets/images/dessert.png"),
   noodle: require("../assets/images/noodles.png"),
   drinks: require("../assets/images/drinks.png"),
+  User: require("../assets/images/user.jpg"),
+  Map: require("../assets/images/map.jpg"),
+  social: require("../assets/images/socialpay.jpg"),
+  credit: require("../assets/images/cart.png"),
+  qr: require("../assets/images/qr.png"),
 };

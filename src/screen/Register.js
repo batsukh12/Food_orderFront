@@ -108,6 +108,9 @@ const Register = ({ navigation }) => {
       }
       if (response?.status) {
         setSucccesss(response?.message);
+        setTimeout(() => {
+          navigation.navigate("SignIn");
+        }, 1000);
       }
     });
   };

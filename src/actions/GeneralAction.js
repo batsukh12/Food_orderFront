@@ -26,7 +26,10 @@ const setFirstUse = () => {
     payload: false,
   };
 };
+const userId = "";
+
 const setUserData = (userData) => {
+  userId = userData;
   return {
     type: types.SET_USER_DATA,
     payload: userData,
@@ -46,14 +49,14 @@ const appStart = () => {
           type: types.SET_TOKEN,
           payload: token,
         });
-        userService.getUserData().then((userResponse) => {
+        userService.getUserData(userId).then((userResponse) => {
           if (userResponse?.status) {
             dispatch({
               type: types.SET_USER_DATA,
-              payload: userResponse?.data,
+              payload: userResponse?.userId,
             });
-            dispatch(cartAction.getCartItems());
-            dispatch(bookmarkAction.getBookmarks());
+            // dispatch(cartAction.getCartItems(userId));
+            // dispatch(bookmarkAction.getBookmarks({ userId }));
             dispatch({
               type: types.SET_APP_LOADING,
               payload: false,
@@ -65,7 +68,7 @@ const appStart = () => {
                   type: types.SET_TOKEN,
                   payload: tokenResponse?.data,
                 });
-                userService.getUserData().then((userResponse) => {
+                userService.getUserData(userId).then((userResponse) => {
                   if (userResponse?.status) {
                     dispatch({
                       type: types.SET_USER_DATA,

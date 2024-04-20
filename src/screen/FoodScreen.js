@@ -38,10 +38,8 @@ const FoodScreen = ({
   const dispatch = useDispatch();
   const itemCount = useSelector(
     (state) =>
-      state?.cartState?.cart?.cartItems?.find((item) => item?.foodId === foodId)
-        ?.count
+      state?.cartState?.carts.find((item) => item.foodId === id)?.count || 0
   );
-
   useEffect(() => {
     foodService.getFoodById(foodId).then((response) => {
       console.log(response?.data);

@@ -5,6 +5,8 @@ import RestaurantCard from "./restaurantCard";
 import FavRestaurant from "./originRestaurant";
 import FoodCard from "./foofCart";
 import CategoryList from "./categoryList";
+import BookmarkCard from "./bookmarkCard";
+import Payment from "./paymentCard";
 export {
   WelcomeCard,
   Separator,
@@ -13,4 +15,6 @@ export {
   FavRestaurant,
   FoodCard,
   CategoryList,
+  BookmarkCard,
+  Payment,
 };

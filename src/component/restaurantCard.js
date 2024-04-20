@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TouchableOpacity, Image } from "react-native";
 import { Colors, Fonts } from "../const";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { useDispatch, useSelector } from "react-redux";
 import { imageService } from "../service";
-
+import { bookmarkAction } from "../actions";
 const RestaurantCard = ({
   id,
   name,
@@ -16,6 +16,7 @@ const RestaurantCard = ({
   navigate,
 }) => {
   const poster = images?.poster;
+  const [userId, setUserId] = useState(null);
 
   const dispatch = useDispatch();
   const isBookmarked = useSelector(
@@ -24,10 +25,30 @@ const RestaurantCard = ({
         (item) => item?.restaurantId === id
       )?.length > 0
   );
+  useEffect(() => {
+    const getUserAndFetch = async () => {
+      try {
+        const user = await StorageService.getUser();
+        setUserId(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUserAndFetch(); // Call the async function
+  }, []);
+  const restaurant = {
+    name: name,
+    images: images,
+    location: "",
+    tags: tags,
+  };
   const addBookmark = () =>
-    dispatch(BookmarkAction.addBookmark({ restaurantId: id }));
+    dispatch(
+      bookmarkAction.addBookmark({ restaurantId: id, userId, restaurant })
+    );
   const removeBookmark = () =>
-    dispatch(BookmarkAction.removeBookmark({ restaurantId: id }));
+    dispatch(bookmarkAction.removeBookmark({ restaurantId: id, userId }));
   return (
     <TouchableOpacity
       style={styles.container}
@@ -39,7 +60,7 @@ const RestaurantCard = ({
         color={Colors.DEFAULT_YELLOW}
         size={24}
         style={styles.bookmark}
-        //onPress={() => (isBookmarked ? removeBookmark() : addBookmark())}
+        onPress={() => (isBookmarked ? removeBookmark() : addBookmark())}
       />
       <Image
         source={{ uri: imageService.getPoster(poster) }}

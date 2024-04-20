@@ -4,6 +4,7 @@ const initialState = {
   isLoading: true,
   token: "",
   isFirstUse: true,
+  userData: "",
 };
 
 const Reducer = (state = initialState, action) => {
@@ -14,8 +15,10 @@ const Reducer = (state = initialState, action) => {
       return { ...state, token: action.payload };
     case GeneralAction.types.SET_FIRST_USE:
       return { ...state, isFirstUse: action.payload };
+    case GeneralAction.types.SET_USER_DATA:
+      return { ...state, userData: action.payload };
     default:
-      return state; // Ensure to return the current state for unknown actions
+      return state;
   }
 };
 

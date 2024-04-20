@@ -1,6 +1,6 @@
 import { cartAction } from "../actions";
 const initialState = {
-  cart: {},
+  cart: [],
   isLoading: false,
 };
 

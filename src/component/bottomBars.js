@@ -5,6 +5,9 @@ import { Colors } from "../const";
 import { Dimensions } from "react-native";
 import HomeScreen from "../screen/HomeScreen";
 import CartScreen from "../screen/CartScreen";
+import BookmarkScreen from "../screen/bookmarkScreen";
+import AccountScreen from "../screen/AccountScreen";
+
 const BottomTabs = createBottomTabNavigator();
 const { height, width } = Dimensions.get("window");
 
@@ -38,15 +41,6 @@ export default () => (
         ),
       }}
     />
-    {/* <BottomTabs.Screen
-      name="Bookmark"
-      component={BookmarkScreen}
-      options={{
-        tabBarIcon: ({ color }) => (
-          <Ionicons name="bookmark-outline" size={23} color={color} />
-        ),
-      }}
-    /> */}
     <BottomTabs.Screen
       name="Cart"
       component={CartScreen}
@@ -56,7 +50,17 @@ export default () => (
         ),
       }}
     />
-    {/* <BottomTabs.Screen
+    <BottomTabs.Screen
+      name="Bookmark"
+      component={BookmarkScreen}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <Ionicons name="bookmark-outline" size={23} color={color} />
+        ),
+      }}
+    />
+
+    <BottomTabs.Screen
       name="Account"
       component={AccountScreen}
       options={{
@@ -64,6 +68,6 @@ export default () => (
           <Ionicons name="person-outline" size={23} color={color} />
         ),
       }}
-    /> */}
+    />
   </BottomTabs.Navigator>
 );

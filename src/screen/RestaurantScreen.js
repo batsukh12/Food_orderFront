@@ -12,12 +12,13 @@ import {
 } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { imageService } from "../service";
-import { restaurantService, bookmarkService } from "../service";
+import { restaurantService, bookmarkService, StorageService } from "../service";
 import ApiConfig from "../config";
 import { Colors, Fonts, image } from "../const";
 import { Separator, CategoryList, FoodCard } from "../component";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import FontAwesome from "react-native-vector-icons/FontAwesome";
+import { bookmarkAction } from "../actions";
 
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
@@ -70,6 +71,7 @@ const RestaurantScreen = ({
   console.log("id " + restaurantId);
   const [restaurant, setRestaurant] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [userId, setUserId] = useState(null);
   const fetchFoods = useCallback(() => {
     restaurantService.getRestaurantById(restaurantId).then((response) => {
       setRestaurant(response?.data);
@@ -85,11 +87,28 @@ const RestaurantScreen = ({
         (item) => item?.restaurantId === restaurantId
       )?.length > 0
   );
-  const userId = "12";
+  useEffect(() => {
+    const getUserAndFetch = async () => {
+      try {
+        const user = await StorageService.getUser();
+        setUserId(user);
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    getUserAndFetch(); // Call the async function
+  }, []);
   const addBookmark = () =>
-    dispatch(bookmarkService.addbookmark({ restaurantId, userId }));
+    dispatch(
+      bookmarkAction.addBookmark({
+        restaurantId,
+        userId,
+        restaurant,
+      })
+    );
   const removeBookmark = () =>
-    dispatch(bookmarkService.removeBookmark({ restaurantId, userId }));
+    dispatch(bookmarkAction.removeBookmark({ restaurantId, userId }));
   return (
     <View style={styles.container}>
       <StatusBar barStyle="default" translucent backgroundColor="transparent" />

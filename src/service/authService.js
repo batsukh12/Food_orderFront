@@ -1,5 +1,6 @@
 import axios from "axios";
 import ApiConfig from "../config";
+import { getToken } from "../Store";
 const AuthRequest = axios.create({
   baseURL: ApiConfig.backend_api.baseUrl,
 });
@@ -41,11 +42,8 @@ const Login = async (user) => {
     return { status: false, message: "Oops! something went wrong." };
   }
 };
-const authHeader = (token) => {
-  return {
-    Authorization: `Bearer ${token}`,
-  };
-};
+const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
+
 const refreshToken = async () => {
   try {
     let tokenResponse = await AuthRequest.post(
