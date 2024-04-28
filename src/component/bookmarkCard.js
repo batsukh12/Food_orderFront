@@ -45,7 +45,10 @@ const BookmarkCard = ({
         style={styles.remomveIcon}
         onPress={() => removeBookmark()}
       />
-      <TouchableOpacity activeOpacity={0.8} onPress={() => navigate(id)}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        onPress={() => navigate(restaurantId)}
+      >
         <Image
           source={{ uri: imageService.getPoster(images?.poster) }}
           style={styles.posterStyle}
@@ -109,14 +112,14 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 15,
     lineHeight: 15 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Medium",
     color: Colors.DEFAULT_BLACK,
     marginBottom: 5,
   },
   tagText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_GREY,
     marginBottom: 5,
   },
@@ -128,7 +131,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "bold",
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_GREY,
     marginBottom: 5,
     marginLeft: 5,
@@ -136,7 +139,7 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 12,
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.DEFAULT_BLACK,
     marginLeft: 3,
   },

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import {
   View,
   Text,
@@ -9,8 +9,9 @@ import {
   FlatList,
   TouchableOpacity,
   Dimensions,
+  Image,
 } from "react-native";
-import { Colors, Fonts } from "../const";
+import { Colors, Fonts, image, customFonts } from "../const";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
@@ -22,6 +23,8 @@ import {
 } from "../component";
 import LottieView from "lottie-react-native";
 import { restaurantService } from "../service";
+import ShowMap from "../component/bottomSheet";
+import { BottomSheetModal } from "@gorhom/bottom-sheet";
 
 const sortStyle = (isActive) =>
   isActive
@@ -35,6 +38,7 @@ const HomeScreen = ({ navigation }) => {
   const [restaurants, setRestaurants] = useState(null);
   const [activeSortItem, setActiveSortItem] = useState("recent");
   const [isLoading, setIsLoading] = useState(false);
+  const [activeCategory, setActiveCategory] = useState(null);
 
   const fetchRestaurants = useCallback(() => {
     setIsLoading(true);
@@ -48,10 +52,21 @@ const HomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchRestaurants();
-    // const unsubscribe = navigation.addListener("focus", fetchRestaurants);
-    // return unsubscribe;
   }, []);
+  const filteredRestaurants = activeCategory
+    ? restaurants.filter((restaurant) =>
+        restaurant.categories.includes(activeCategory)
+      )
+    : restaurants;
+  const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
 
+  const openBottomSheet = () => {
+    setIsBottomSheetVisible(true);
+  };
+
+  const closeBottomSheet = () => {
+    setIsBottomSheetVisible(false);
+  };
   return (
     <View style={styles.container}>
       <StatusBar
@@ -73,18 +88,21 @@ const HomeScreen = ({ navigation }) => {
           <View style={styles.background} />
           <View style={styles.header}>
             <View style={styles.locationContainer}>
-              <Ionicons
-                name="location"
-                size={18}
-                color={Colors.DEFAULT_BLACK}
-              />
-              <Text style={styles.locationText}>Хүргэлтийн хаяг </Text>
-              <Text style={styles.selectedText}>Home</Text>
-              <MaterialIcons
-                name="keyboard-arrow-down"
-                size={18}
-                color={Colors.DEFAULT_BLACK}
-              />
+              <Image style={styles.image} source={image.deliver} />
+              <TouchableOpacity
+                style={{ marginLeft: 20 }}
+                onPress={openBottomSheet}
+              >
+                <Text style={styles.locationText}>Хүргэлтийн хаяг </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text style={styles.selectedText}>Home</Text>
+                  <MaterialIcons
+                    name="keyboard-arrow-down"
+                    size={18}
+                    color={Colors.DEFAULT_GREEN}
+                  />
+                </View>
+              </TouchableOpacity>
               <Feather
                 name="bell"
                 size={26}
@@ -95,6 +113,10 @@ const HomeScreen = ({ navigation }) => {
                 <Text style={styles.alertBadgeText}>12</Text>
               </View>
             </View>
+            <ShowMap
+              visible={isBottomSheetVisible}
+              onClose={closeBottomSheet}
+            />
             <View style={styles.searchContainer}>
               <View style={styles.searchSections}>
                 <Feather name="search" size={25} color={Colors.DEFAULT_GREY} />
@@ -104,17 +126,24 @@ const HomeScreen = ({ navigation }) => {
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={styles.categoriesContainer}
-            >
-              <Categories />
-            </ScrollView>
+            ></ScrollView>
+            <Categories
+              activeCategory={activeCategory}
+              setActiveCategory={setActiveCategory}
+            />
             <ScrollView style={styles.listContainer}>
               <View style={styles.horizontalListContainer}>
                 <View style={styles.listHeader}>
                   <Text style={styles.listHeaderTitle}>Онцгой </Text>
-                  <Text style={styles.listHeaderSubtitle}>Бүгдийг харах </Text>
+                  <TouchableOpacity
+                    activeOpacity={0.8}
+                    onPress={() => setActiveCategory(null)}
+                  >
+                    <Text style={styles.listHeaderSubtitle}>Бүгдийг харах</Text>
+                  </TouchableOpacity>
                 </View>
                 <FlatList
-                  data={restaurants}
+                  data={filteredRestaurants}
                   keyExtractor={(item) => item?.id}
                   horizontal
                   ListHeaderComponent={() => <Separator width={20} />}
@@ -190,12 +219,16 @@ const styles = StyleSheet.create({
     marginTop: 40,
     backgroundColor: Colors.DEFAULT_WHITE,
     height: 2000,
-    top: -1 * (2000 - 230),
+    top: -1 * (2000 - 250),
     width: 2000,
     borderRadius: 2000,
     alignSelf: "center",
     position: "absolute",
     zIndex: -1,
+  },
+  image: {
+    width: 40,
+    height: 40,
   },
   container: {
     marginTop: 12,
@@ -225,17 +258,20 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 15,
     lineHeight: 15 * 1.4,
+    fontFamily: "Comfortaa-Bold",
   },
   selectedText: {
+    fontWeight: "bold",
     color: Colors.DEFAULT_BLACK,
     marginLeft: 5,
-    fontSize: 16,
-    lineHeight: 16 * 1.4,
+    fontSize: 18,
+    lineHeight: 18 * 1.4,
+    fontFamily: "POPPINS-BLACK",
   },
   alertBadge: {
     position: "absolute",
     right: -2,
-    top: -10,
+    top: -6,
     borderRadius: 10,
     backgroundColor: Colors.DEFAULT_YELLOW,
     justifyContent: "center",
@@ -248,7 +284,7 @@ const styles = StyleSheet.create({
     lineHeight: 12 * 1.4,
   },
   searchContainer: {
-    backgroundColor: Colors.DEFAULT_WHITE,
+    backgroundColor: Colors.LIGHT_GREY,
     borderWidth: 1,
     borderColor: Colors.DEFAULT_GREY,
     height: 45,
@@ -262,6 +298,7 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
     alignItems: "center",
+    fontFamily: "Comfortaa-Regular",
   },
   categoriesContainer: {
     marginTop: 5,
@@ -270,9 +307,9 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     zIndex: -5,
   },
-  horizontalListContainer: {
-    marginTop: 30,
-  },
+  // horizontalListContainer: {
+  //   marginTop: 30,
+  // },
   listHeader: {
     marginTop: 10,
     flexDirection: "row",
@@ -285,13 +322,13 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_BLACK,
     fontSize: 16,
     lineHeight: 16 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
   listHeaderSubtitle: {
     color: Colors.DEFAULT_YELLOW,
-    fontSize: 13,
-    lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontSize: 14,
+    lineHeight: 14 * 1.4,
+    fontFamily: "Comfortaa-Bold",
   },
   sortListContainer: {
     flexDirection: "row",
@@ -313,7 +350,7 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_BLACK,
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-Regular",
   },
 });
 export default HomeScreen;

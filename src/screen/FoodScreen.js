@@ -38,18 +38,17 @@ const FoodScreen = ({
   const dispatch = useDispatch();
   const itemCount = useSelector(
     (state) =>
-      state?.cartState?.carts.find((item) => item.foodId === id)?.count || 0
+      state?.cartState?.cart?.find((item) => item.id === foodId)?.count || 0
   );
   useEffect(() => {
     foodService.getFoodById(foodId).then((response) => {
-      console.log(response?.data);
       setFood(response?.data);
     });
   }, []);
 
-  const addToCart = (foodId) => dispatch(cartAction.addToCart({ foodId }));
-  const removeFromCart = (foodId) =>
-    dispatch(cartAction.removeFromCart({ foodId }));
+  // const addToCart = (foodId) => dispatch(cartAction.addToCart({ foodId }));
+  // const removeFromCart = (foodId) =>
+  //   dispatch(cartAction.removeFromCart({ foodId }));
 
   return (
     <View style={styles.container}>
@@ -72,7 +71,7 @@ const FoodScreen = ({
         <View style={styles.mainContainer}>
           <View style={styles.titleHeaderContainer}>
             <Text style={styles.titleText}>{food?.name}</Text>
-            <Text style={styles.priceText}>$ {food?.price}</Text>
+            <Text style={styles.priceText}>₮ {food?.price}</Text>
           </View>
           <View style={styles.subHeaderContainer}>
             <View style={styles.rowAndCenter}>
@@ -90,7 +89,7 @@ const FoodScreen = ({
             </View>
             <View style={styles.rowAndCenter}>
               <Image style={styles.iconImage} source={image.DELIVERY_CHARGE} />
-              <Text style={styles.deliveryText}>Free Delivery</Text>
+              <Text style={styles.deliveryText}>Хүргэлт үнэгүй </Text>
             </View>
           </View>
           <View style={styles.subMenuContainer}>
@@ -99,7 +98,7 @@ const FoodScreen = ({
               onPress={() => setSelectedSubMenu("Details")}
             >
               <Text style={setStyle(selectedSubMenu === "Details")}>
-                Details
+                Дэлгэрэнгүй
               </Text>
             </TouchableOpacity>
             <TouchableOpacity
@@ -108,20 +107,20 @@ const FoodScreen = ({
               s
             >
               <Text style={setStyle(selectedSubMenu === "Reviews")}>
-                Reviews
+                Сэтгэгдэл
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.detailsContainer}>
             {food?.description ? (
               <>
-                <Text style={styles.detailHeader}>Description</Text>
+                <Text style={styles.detailHeader}>Тайлбар </Text>
                 <Text style={styles.detailContent}>{food?.description}</Text>
               </>
             ) : null}
             {food?.ingredients ? (
               <>
-                <Text style={styles.detailHeader}>Ingredients</Text>
+                <Text style={styles.detailHeader}>Орц </Text>
                 <Text style={styles.detailContent}>{food?.ingredients}</Text>
               </>
             ) : null}
@@ -134,14 +133,14 @@ const FoodScreen = ({
             name="minus"
             color={Colors.DEFAULT_YELLOW}
             size={18}
-            onPress={() => removeFromCart(foodId)}
+            // onPress={() => removeFromCart(foodId)}
           />
           <Text style={styles.itemCountText}>{itemCount ? itemCount : 0}</Text>
           <AntDesign
             name="plus"
             color={Colors.DEFAULT_YELLOW}
             size={18}
-            onPress={() => addToCart(foodId)}
+            //onPress={() => addToCart(foodId)}
           />
         </View>
         <TouchableOpacity
@@ -149,7 +148,7 @@ const FoodScreen = ({
           onPress={() => navigation.navigate("Cart")}
           activeOpacity={0.8}
         >
-          <Text style={styles.cartButtonText}>Go to Cart</Text>
+          <Text style={styles.cartButtonText}>Сагслах </Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -182,13 +181,13 @@ const styles = StyleSheet.create({
   titleText: {
     fontSize: 23,
     lineHeight: 23 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.DEFAULT_BLACK,
   },
   priceText: {
     fontSize: 23,
     lineHeight: 23 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.DEFAULT_YELLOW,
   },
   subHeaderContainer: {
@@ -205,14 +204,14 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
     marginLeft: 5,
   },
   reviewsText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     color: Colors.DEFAULT_BLACK,
     marginLeft: 5,
   },
@@ -223,7 +222,7 @@ const styles = StyleSheet.create({
   deliveryText: {
     fontSize: 12,
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     color: Colors.DEFAULT_BLACK,
     marginLeft: 3,
   },
@@ -245,7 +244,7 @@ const styles = StyleSheet.create({
   subMenuButtonText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Regular",
     color: Colors.DEFAULT_BLACK,
   },
   detailsContainer: {
@@ -254,7 +253,7 @@ const styles = StyleSheet.create({
   detailHeader: {
     fontSize: 15,
     lineHeight: 15 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     color: Colors.DEFAULT_BLACK,
     marginTop: 10,
     marginBottom: 2,
@@ -262,7 +261,7 @@ const styles = StyleSheet.create({
   detailContent: {
     fontSize: 12,
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.INACTIVE_GREY,
     textAlign: "justify",
   },
@@ -304,7 +303,7 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_WHITE,
     fontSize: 14,
     lineHeight: 14 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
 });
 

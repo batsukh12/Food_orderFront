@@ -29,7 +29,7 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 22,
-    fontFamily: "Confortaa-Bold",
+    fontFamily: "Comfortaa-Bold",
   },
   desc: {
     marginTop: 10,
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     //fontFamily: Fonts.CONFORTAA_BOLD,
 
-    fontFamily: "Confortaa-Regular",
+    fontFamily: "Comfortaa-Regular",
     textAlign: "center",
     marginHorizontal: 20,
   },

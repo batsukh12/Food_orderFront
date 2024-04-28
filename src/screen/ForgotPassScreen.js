@@ -71,14 +71,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     width: setWidth(80),
     textAlign: "center",
   },
   title: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     lineHeight: 20 * 1.4,
     marginTop: 50,
     marginBottom: 10,
@@ -86,7 +86,7 @@ const styles = StyleSheet.create({
   },
   content: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     marginTop: 10,
     marginBottom: 20,
     marginHorizontal: 20,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     textAlignVertical: "center",
     padding: 0,
     height: setHeight(6),
-    color: Colors.DEFAULT_BLACK,
+    fontFamily: "Comfortaa-Regular",
     flex: 1,
   },
   signinButton: {
@@ -125,7 +125,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 18 * 1.4,
     color: Colors.DEFAULT_WHITE,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
 });
 

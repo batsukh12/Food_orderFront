@@ -79,7 +79,7 @@ const FoodCard = ({ id, name, description, price, image, navigate }) => {
           </Text>
         </TouchableOpacity>
         <View style={styles.footerContainer}>
-          <Text style={styles.priceText}>$ {price}</Text>
+          <Text style={styles.priceText}>₮ {price}</Text>
           <View style={styles.itemAddContainer}>
             {itemCount > 0 ? (
               <>
@@ -128,7 +128,7 @@ const styles = StyleSheet.create({
   titleText: {
     width: setWidth(60),
     color: Colors.DEFAULT_BLACK,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     fontSize: 13,
     lineHeight: 13 * 1.4,
     marginBottom: 8,
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   descriptionText: {
     width: setWidth(60),
     color: Colors.DEFAULT_GREY,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     fontSize: 11,
     fontWeight: "bold",
     lineHeight: 10 * 1.4,
@@ -144,7 +144,7 @@ const styles = StyleSheet.create({
   },
   priceText: {
     color: Colors.DEFAULT_YELLOW,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     fontSize: 14,
     fontWeight: "bold",
     lineHeight: 14 * 1.4,
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
   itemCountText: {
     color: Colors.DEFAULT_BLACK,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Medium",
     fontSize: 14,
     lineHeight: 14 * 1.4,
     marginHorizontal: 8,

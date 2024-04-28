@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     fontSize: 12,
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   deliveryDetailsIcon: {
@@ -116,13 +116,13 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 10,
     lineHeight: 10 * 1.4,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   reviewsText: {
     fontSize: 10,
     lineHeight: 10 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Regular",
     color: Colors.DEFAULT_BLACK,
   },
 });

@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   titleText: {
     color: Colors.DEFAULT_YELLOW,
     fontSize: 32,
-    fontFamily: Fonts.POPPINS_LIGHT,
+    fontFamily: "POPPINS-BLACK",
   },
   animation: {
     width: setWidth(60),

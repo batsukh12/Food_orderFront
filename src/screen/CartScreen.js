@@ -17,6 +17,7 @@ import AntDesign from "react-native-vector-icons/AntDesign";
 import { useSelector, useDispatch } from "react-redux";
 import LottieView from "lottie-react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { StorageService } from "../service";
 
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
@@ -29,9 +30,15 @@ const CartScreen = ({ navigation }) => {
   const fetchCart = useCallback(async () => {
     try {
       const cart = await AsyncStorage.getItem("carts");
+      const userId = await StorageService.getUser();
+
       if (cart) {
         const parsedCartItems = JSON.parse(cart);
-        setCarts(parsedCartItems);
+        const getCart = parsedCartItems.filter(
+          (cart) => cart.userId === userId
+        );
+
+        setCarts(getCart);
       }
     } catch (error) {
       console.error("Error while fetching cart:", error);
@@ -76,7 +83,7 @@ const CartScreen = ({ navigation }) => {
           size={30}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>My Cart</Text>
+        <Text style={styles.headerTitle}>Сагс </Text>
       </View>
       {carts.length > 0 ? (
         <ScrollView>
@@ -107,17 +114,17 @@ const CartScreen = ({ navigation }) => {
           </View>
           <View style={styles.amountContainer}>
             <View style={styles.amountSubContainer}>
-              <Text style={styles.amountLabelText}>Item Total</Text>
-              <Text style={styles.amountText}>$ {totalAmount}</Text>
+              <Text style={styles.amountLabelText}>Барааны үнэ </Text>
+              <Text style={styles.amountText}>₮ {totalAmount}</Text>
             </View>
             <View style={styles.amountSubContainer}>
-              <Text style={styles.amountLabelText}>Discount</Text>
+              <Text style={styles.amountLabelText}>Хөнгөлөлт </Text>
               <Text style={styles.amountText}>
-                $ 0.00 {/* Assuming no discount */}
+                ₮ 0.00 {/* Assuming no discount */}
               </Text>
             </View>
             <View style={styles.amountSubContainer}>
-              <Text style={styles.amountLabelText}>Delivery Fee</Text>
+              <Text style={styles.amountLabelText}>Хүргэлт </Text>
               <Text
                 style={{ ...styles.amountText, color: Colors.DEFAULT_GREEN }}
               >
@@ -126,8 +133,8 @@ const CartScreen = ({ navigation }) => {
             </View>
           </View>
           <View style={styles.totalContainer}>
-            <Text style={styles.totalText}>Total</Text>
-            <Text style={styles.totalText}>$ {totalAmount}</Text>
+            <Text style={styles.totalText}>Нийт үнэ </Text>
+            <Text style={styles.totalText}>₮ {totalAmount}</Text>
           </View>
           <TouchableOpacity
             style={styles.checkoutButton}
@@ -139,9 +146,9 @@ const CartScreen = ({ navigation }) => {
                 color={Colors.DEFAULT_WHITE}
                 size={20}
               />
-              <Text style={styles.checkoutText}>Checkout</Text>
+              <Text style={styles.checkoutText}>Захиалах </Text>
             </View>
-            <Text style={styles.checkoutText}>$ {totalAmount}</Text>
+            <Text style={styles.checkoutText}>₮ {totalAmount}</Text>
           </TouchableOpacity>
           <Separator height={setHeight(9)} />
         </ScrollView>
@@ -153,13 +160,13 @@ const CartScreen = ({ navigation }) => {
             autoPlay
             loop
           />
-          <Text style={styles.emptyCartText}>Cart Empty</Text>
+          <Text style={styles.emptyCartText}>Сагс хоосон байна </Text>
           <Text style={styles.emptyCartSubText}>
-            Go ahead and order some tasty food
+            Явж, амттай хоол захиалаарай
           </Text>
           <TouchableOpacity style={styles.addButtonEmpty}>
             <AntDesign name="plus" color={Colors.DEFAULT_WHITE} size={20} />
-            <Text style={styles.addButtonEmptyText}>Add Food</Text>
+            <Text style={styles.addButtonEmptyText}>Захиалах</Text>
           </TouchableOpacity>
           <Separator height={setHeight(15)} />
         </View>
@@ -181,7 +188,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     width: setWidth(80),
     textAlign: "center",
@@ -201,7 +208,7 @@ const styles = StyleSheet.create({
   },
   promoCodeText: {
     fontSize: 15,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Medium",
     lineHeight: 15 * 1.4,
     color: Colors.DEFAULT_BLACK,
     marginLeft: 10,
@@ -223,13 +230,13 @@ const styles = StyleSheet.create({
   },
   amountLabelText: {
     fontSize: 15,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 15 * 1.4,
     color: Colors.DEFAULT_GREEN,
   },
   amountText: {
     fontSize: 15,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 15 * 1.4,
     color: Colors.DEFAULT_BLACK,
   },
@@ -242,7 +249,7 @@ const styles = StyleSheet.create({
   },
   totalText: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     color: Colors.DEFAULT_BLACK,
   },
@@ -260,7 +267,7 @@ const styles = StyleSheet.create({
   },
   checkoutText: {
     fontSize: 16,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 16 * 1.4,
     color: Colors.DEFAULT_WHITE,
     marginLeft: 8,
@@ -272,13 +279,13 @@ const styles = StyleSheet.create({
   },
   emptyCartText: {
     fontSize: 30,
-    fontFamily: Fonts.POPPINS_LIGHT,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 30 * 1.4,
     color: Colors.DEFAULT_GREEN,
   },
   emptyCartSubText: {
     fontSize: 12,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     lineHeight: 12 * 1.4,
     color: Colors.INACTIVE_GREY,
   },
@@ -295,7 +302,7 @@ const styles = StyleSheet.create({
   },
   addButtonEmptyText: {
     fontSize: 12,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 12 * 1.4,
     color: Colors.DEFAULT_WHITE,
     marginLeft: 10,

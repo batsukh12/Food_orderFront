@@ -47,7 +47,7 @@ const SigninScreen = ({ navigation }) => {
         StorageService.setUser(response?.userId).then(() => {
           dispatch(GeneralAction.setUserData(response?.userId));
         });
-        //navigation.navigate("HomeScreen");
+        navigation.navigate("HomeScreen");
       }
     });
   };
@@ -130,7 +130,7 @@ const SigninScreen = ({ navigation }) => {
         activeOpacity={0.8}
       >
         {isLoading ? (
-          <LottieView source={Images.LOADING} autoPlay />
+          <LottieView source={image.LOADING} autoPlay />
         ) : (
           <Text style={styles.signinButtonText}>Нэвтрэх </Text>
         )}
@@ -180,14 +180,14 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: "Confortaa-Bold",
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     width: setWidth(80),
     textAlign: "center",
   },
   title: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     lineHeight: 20 * 1.4,
     marginTop: 50,
     marginBottom: 10,
@@ -220,6 +220,7 @@ const styles = StyleSheet.create({
     height: setHeight(6),
     color: Colors.DEFAULT_BLACK,
     flex: 1,
+    fontFamily: "Comfortaa-Regular",
   },
   forgotPasswordContainer: {
     marginHorizontal: 20,
@@ -232,7 +233,7 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 12 * 1.4,
     color: Colors.DEFAULT_GREY,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
   forgotPasswordText: {
     fontSize: 12,
@@ -253,7 +254,7 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 18 * 1.4,
     color: Colors.DEFAULT_WHITE,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
   signupContainer: {
     marginHorizontal: 20,
@@ -266,13 +267,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     lineHeight: 13 * 1.4,
     color: Colors.DEFAULT_BLACK,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
   },
   signupText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
     color: Colors.DEFAULT_GREEN,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Regular",
     marginLeft: 5,
   },
   orText: {
@@ -321,7 +322,7 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_WHITE,
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Bold",
   },
   toggleContainer: {
     flexDirection: "row",

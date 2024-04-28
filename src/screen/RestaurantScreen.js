@@ -144,7 +144,7 @@ const RestaurantScreen = ({
                 color={Colors.DEFAULT_YELLOW}
               />
               <Text style={styles.ratingText}>4.2</Text>
-              <Text style={styles.reviewsText}>(455 Reviews)</Text>
+              <Text style={styles.reviewsText}>(455 сэтгэгдэл )</Text>
             </View>
             <View style={styles.deliveryDetailsContainer}>
               <View style={styles.rowAndCenter}>
@@ -152,7 +152,7 @@ const RestaurantScreen = ({
                   style={styles.deliveryDetailIcon}
                   source={image.DELIVERY_CHARGE}
                 />
-                <Text style={styles.deliveryDetailText}>Free Delivery</Text>
+                <Text style={styles.deliveryDetailText}>Хүргэлт үнэгүй </Text>
               </View>
               <View style={styles.rowAndCenter}>
                 <Image
@@ -242,7 +242,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 23,
     lineHeight: 23 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   tagText: {
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "bold",
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.DEFAULT_GREY,
   },
   ratingReviewsContainer: {
@@ -264,14 +264,14 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   reviewsText: {
     marginLeft: 5,
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   deliveryDetailsContainer: {
@@ -285,7 +285,7 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     fontSize: 12,
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   deliveryDetailIcon: {
@@ -308,7 +308,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: "bold",
     lineHeight: 12 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Poppins-Medium",
     color: Colors.DEFAULT_YELLOW,
   },
   categoriesContainer: {

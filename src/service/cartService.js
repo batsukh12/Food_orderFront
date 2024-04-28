@@ -33,13 +33,13 @@ const getCartItems = async () => {
   }
 };
 
-const addToCart = async ({ foodId, userId }) => {
-  console.log(foodId + " " + userId);
+const addToCart = async ({ items, userId }) => {
+  console.log(items, userId);
   console.log(`CartService | addToCart`);
   try {
     let response = await axios.post(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Cart}/${foodId}`,
-      { userId }, // Include userId in the request body
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Cart}`,
+      { items, userId }, // Include userId in the request body
       {
         headers: authHeader(getToken()),
       }

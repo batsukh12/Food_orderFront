@@ -27,13 +27,13 @@ const styles = StyleSheet.create({
   activeCategoryText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     color: Colors.DEFAULT_BLACK,
   },
   inActiveCategoryText: {
     fontSize: 13,
     lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Poppins-SemiBold",
     color: Colors.INACTIVE_GREY,
   },
 });

@@ -7,6 +7,7 @@ import HomeScreen from "../screen/HomeScreen";
 import CartScreen from "../screen/CartScreen";
 import BookmarkScreen from "../screen/bookmarkScreen";
 import AccountScreen from "../screen/AccountScreen";
+import MapScreen from "../screen/trackMap";
 
 const BottomTabs = createBottomTabNavigator();
 const { height, width } = Dimensions.get("window");
@@ -47,6 +48,16 @@ export default () => (
       options={{
         tabBarIcon: ({ color }) => (
           <Ionicons name="cart-outline" size={23} color={color} />
+        ),
+      }}
+    />
+
+    <BottomTabs.Screen
+      name="Map"
+      component={MapScreen}
+      options={{
+        tabBarIcon: ({ color }) => (
+          <Ionicons name="map-outline" size={23} color={color} />
         ),
       }}
     />

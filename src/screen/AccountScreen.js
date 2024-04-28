@@ -62,7 +62,7 @@ const AccountScreen = ({ navigation }) => {
           color={Colors.DEFAULT_WHITE}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerText}>Account</Text>
+        <Text style={styles.headerText}>Профайл </Text>
         <View>
           <Feather name="bell" size={20} color={Colors.DEFAULT_WHITE} />
           <View style={styles.alertBadge}>
@@ -88,7 +88,7 @@ const AccountScreen = ({ navigation }) => {
               color={Colors.DEFAULT_GREEN}
             />
           </View>
-          <Text style={styles.menuText}>My All {"\n"}Orders</Text>
+          <Text style={styles.menuText}>Миний {"\n"}захиалга</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
           <View
@@ -100,7 +100,7 @@ const AccountScreen = ({ navigation }) => {
               color={Colors.SECONDARY_RED}
             />
           </View>
-          <Text style={styles.menuText}>Offers {"&\n"} Promos</Text>
+          <Text style={styles.menuText}> Хөнгөлөлт {"\n"} урамшуулал </Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
           <View
@@ -112,11 +112,11 @@ const AccountScreen = ({ navigation }) => {
               color={Colors.DEFAULT_YELLOW}
             />
           </View>
-          <Text style={styles.menuText}>Delivery {"&\n"} Addresses</Text>
+          <Text style={styles.menuText}>Хадгалсан {"\n"} хаяг</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.mainContainer}>
-        <Text style={styles.sectionHeaderText}>My Account</Text>
+        <Text style={styles.sectionHeaderText}>Аккоунт </Text>
         <TouchableOpacity style={styles.sectionContainer} activeOpacity={0.8}>
           <View style={styles.sectionTextContainer}>
             <Ionicons
@@ -124,7 +124,7 @@ const AccountScreen = ({ navigation }) => {
               size={18}
               color={Colors.DEFAULT_GREEN}
             />
-            <Text style={styles.sectionText}>Manage Profile</Text>
+            <Text style={styles.sectionText}>Профайл </Text>
           </View>
           <Feather
             name="chevron-right"
@@ -132,14 +132,18 @@ const AccountScreen = ({ navigation }) => {
             size={20}
           />
         </TouchableOpacity>
-        <TouchableOpacity style={styles.sectionContainer} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.sectionContainer}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("Payment")}
+        >
           <View style={styles.sectionTextContainer}>
             <Ionicons
               name="card-outline"
               size={18}
               color={Colors.DEFAULT_GREEN}
             />
-            <Text style={styles.sectionText}>Payment</Text>
+            <Text style={styles.sectionText}>Төлбөр </Text>
           </View>
           <Feather
             name="chevron-right"
@@ -148,23 +152,23 @@ const AccountScreen = ({ navigation }) => {
           />
         </TouchableOpacity>
 
-        <Text style={styles.sectionHeaderText}>Notification</Text>
+        <Text style={styles.sectionHeaderText}>Мэдээлэл</Text>
         <View style={styles.sectionContainer} activeOpacity={0.8}>
           <View style={styles.sectionTextContainer}>
             <Feather name="bell" size={18} color={Colors.DEFAULT_GREEN} />
-            <Text style={styles.sectionText}>Notification</Text>
+            <Text style={styles.sectionText}>Мэдэгдэл </Text>
           </View>
           {/* <ToggleButton size={0.5} /> */}
         </View>
         <View style={styles.sectionContainer} activeOpacity={0.8}>
           <View style={styles.sectionTextContainer}>
             <Feather name="bell" size={18} color={Colors.DEFAULT_GREEN} />
-            <Text style={styles.sectionText}>Promos & Offers Notification</Text>
+            <Text style={styles.sectionText}>Хөнгөлөлт урамшуулал </Text>
           </View>
           {/* <ToggleButton size={0.5} /> */}
         </View>
 
-        <Text style={styles.sectionHeaderText}>More</Text>
+        <Text style={styles.sectionHeaderText}>Бусад </Text>
         <View style={styles.sectionContainer} activeOpacity={0.8}>
           <View style={styles.sectionTextContainer}>
             <Ionicons
@@ -187,7 +191,7 @@ const AccountScreen = ({ navigation }) => {
               size={18}
               color={Colors.DEFAULT_GREEN}
             />
-            <Text style={styles.sectionText}>Logout</Text>
+            <Text style={styles.sectionText}>Гарах </Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -219,7 +223,7 @@ const styles = StyleSheet.create({
   },
   headerText: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     color: Colors.DEFAULT_WHITE,
   },
@@ -264,13 +268,13 @@ const styles = StyleSheet.create({
   },
   nameText: {
     fontSize: 15,
-    fontFamily: Fonts.POPPINS_REGULAR,
+    fontFamily: "Poppins-Regular",
     lineHeight: 15 * 1.4,
     color: Colors.DEFAULT_WHITE,
   },
   emailText: {
     fontSize: 12,
-    fontFamily: Fonts.POPPINS_REGULAR,
+    fontFamily: "Poppins-Regular",
     lineHeight: 12 * 1.4,
     color: Colors.DEFAULT_WHITE,
   },
@@ -298,7 +302,7 @@ const styles = StyleSheet.create({
   },
   menuText: {
     fontSize: 12,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 12 * 1.4,
     color: Colors.DEFAULT_BLACK,
     textAlign: "center",
@@ -315,7 +319,7 @@ const styles = StyleSheet.create({
   },
   sectionHeaderText: {
     fontSize: 14,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 14 * 1.4,
     color: Colors.DEFAULT_BLACK,
     marginTop: 25,
@@ -332,7 +336,7 @@ const styles = StyleSheet.create({
   },
   sectionText: {
     fontSize: 13,
-    fontFamily: Fonts.POPPINS_REGULAR,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 13 * 1.4,
     color: Colors.INACTIVE_GREY,
     marginLeft: 10,

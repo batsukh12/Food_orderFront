@@ -9,8 +9,7 @@ import {
 } from "react-native";
 import { Colors, categoryItems, image } from "../const";
 
-const Categories = () => {
-  const [activeCategory, setActiveCategory] = useState(null);
+const Categories = ({ activeCategory, setActiveCategory }) => {
   return (
     <View style={{ marginBottom: 20 }}>
       <ScrollView horizontal showsHorizontalScrollIndicator={false}>
@@ -22,7 +21,7 @@ const Categories = () => {
               <TouchableOpacity
                 style={[
                   styles.categoryButton,
-                  isActive && styles.activeCategoryButton, // Apply active styles if active
+                  isActive && styles.activeCategoryButton,
                 ]}
                 onPress={() => setActiveCategory(category.name)}
               >
@@ -31,7 +30,7 @@ const Categories = () => {
               <Text
                 style={[styles.categoryText, isActive && styles.activeText]}
               >
-                {category.name}
+                {category.mon}
               </Text>
             </View>
           );
@@ -64,7 +63,9 @@ const styles = StyleSheet.create({
   },
   categoryText: {
     marginTop: 8,
-    fontSize: 16,
+    fontSize: 14,
+    fontFamily: "Comfortaa-Bold",
+
     //fontWeight: "bold",
   },
   activeText: {

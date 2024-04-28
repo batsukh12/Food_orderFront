@@ -81,12 +81,12 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   paymentTitle: {
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Poppins-Bold",
     fontSize: 14,
     color: Colors.DEFAULT_BLACK,
   },
   paymentDesc: {
-    fontFamily: Fonts.POPPINS_REGULAR,
+    fontFamily: "Poppins-Bold",
     fontSize: 12,
     color: Colors.DEFAULT_GREY,
   },

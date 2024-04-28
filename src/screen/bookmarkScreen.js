@@ -61,7 +61,6 @@ const BookmarkScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, [navigation, fetchBookmarks]);
-
   return (
     <View style={styles.container}>
       <StatusBar
@@ -76,7 +75,7 @@ const BookmarkScreen = ({ navigation }) => {
           size={30}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>Bookmarks</Text>
+        <Text style={styles.headerTitle}>Хадгалсан </Text>
       </View>
       <FlatList
         style={styles.bookmarkList}
@@ -120,7 +119,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     width: setWidth(80),
     textAlign: "center",

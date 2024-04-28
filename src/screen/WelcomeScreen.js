@@ -67,7 +67,7 @@ const WelcomeScreen = ({ navigation }) => {
     StorageService.setFirstUse().then(() => {
       dispatch(GeneralAction.setFirstUse());
     });
-    // navigation.navigate("SignIn");
+    navigation.navigate("SignIn");
   };
   return (
     <SafeAreaView style={styles.container}>
@@ -150,6 +150,7 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: 16,
     lineHeight: 16 * 1.4,
+    fontFamily: "Poppins-Bold",
   },
   button: {
     backgroundColor: Colors.LIGHT_GREEN,
@@ -174,6 +175,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: Colors.DEFAULT_WHITE,
     lineHeight: 20 * 1.4,
+    fontFamily: "POPPINS-BLACK",
   },
 });
 

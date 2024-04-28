@@ -17,4 +17,5 @@ export default {
   social: require("../assets/images/socialpay.jpg"),
   credit: require("../assets/images/cart.png"),
   qr: require("../assets/images/qr.png"),
+  deliver: require("../assets/images/deliver.png"),
 };

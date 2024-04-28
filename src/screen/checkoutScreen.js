@@ -14,14 +14,14 @@ import {
 import { Colors, Fonts, image } from "../const";
 import { FoodCard, Separator, Payment } from "../component";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { imageService } from "../service";
+import { cartService, imageService, StorageService } from "../service";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const addressList = [
-  { id: "1", title: "Home", description: "Mongolia, 12th Street" },
-  { id: "2", title: "Work", description: "Business Street, Building 23" },
-  { id: "3", title: "Friend", description: "River Lane, House 45" },
+  { id: "1", title: "Home", description: "Khan uul 21-r duureg" },
+  { id: "2", title: "Work", description: "Ikh delguur phantom" },
+  { id: "3", title: "School", description: "Bagshiin deed" },
 ];
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
@@ -31,15 +31,13 @@ const CheckoutScreen = ({ navigation }) => {
   const [carts, setCarts] = useState([]);
   const [totalAmount, setTotalAmount] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  // State variable to store the currently selected address
   const [selectedAddress, setSelectedAddress] = useState(addressList[0]); // Initial value set to the first address
+  const [user, setUser] = useState("");
 
-  // Function to toggle the visibility of the modal
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
-  // Function to handle selecting an address from the list
   const handleAddressSelect = (address) => {
     setSelectedAddress(address); // Update the selected address
     setIsModalVisible(false); // Close the modal after selection
@@ -47,9 +45,15 @@ const CheckoutScreen = ({ navigation }) => {
   const fetchCart = useCallback(async () => {
     try {
       const cart = await AsyncStorage.getItem("carts");
+      const userId = await StorageService.getUser();
+      setUser(userId);
       if (cart) {
         const parsedCartItems = JSON.parse(cart);
-        setCarts(parsedCartItems);
+        const getCart = parsedCartItems.filter(
+          (cart) => cart.userId === userId
+        );
+
+        setCarts(getCart);
       }
     } catch (error) {
       console.error("Error while fetching cart:", error);
@@ -65,9 +69,8 @@ const CheckoutScreen = ({ navigation }) => {
     });
 
     return unsubscribe;
-  }, [fetchCart]);
+  }, []);
   useEffect(() => {
-    // Calculate total amount based on the current state of the cart
     const calculateTotalAmount = () => {
       const total = carts.reduce(
         (acc, curr) => acc + curr.price * curr.count,
@@ -76,9 +79,27 @@ const CheckoutScreen = ({ navigation }) => {
       setTotalAmount(total.toFixed(2));
     };
 
-    // Call the function to calculate the total amount
     calculateTotalAmount();
   }, [carts]);
+
+  const addToCart = () => {
+    if (!Array.isArray(carts) || carts.length === 0) {
+      console.error("carts is not a valid array or is empty");
+      return;
+    }
+    const itemsArray = carts.map((cartItem) => ({
+      foodId: cartItem.id,
+      image: cartItem.image,
+      name: cartItem.name,
+      count: cartItem.count,
+      price: cartItem.price,
+      totalPrice: cartItem.price * cartItem.count,
+    }));
+    const userId = user;
+
+    cartService.addToCart({ items: itemsArray, userId: userId });
+    navigation.navigate("Deliver");
+  };
 
   return (
     <View style={styles.container}>
@@ -94,7 +115,7 @@ const CheckoutScreen = ({ navigation }) => {
           size={30}
           onPress={() => navigation.goBack()}
         />
-        <Text style={styles.headerTitle}>Checkout</Text>
+        <Text style={styles.headerTitle}>Захиалга </Text>
       </View>
       <View style={styles.mapDetail}>
         <TouchableOpacity activeOpacity={0.8}>
@@ -103,14 +124,14 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={{ marginLeft: 10, flex: 1 }}>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={styles.titleText}>
-              Deliver: {selectedAddress.title}
+              Хүргэлтийн хаяг: {selectedAddress.title}
             </Text>
             <TouchableOpacity
               activeOpacity={0.8}
               onPress={toggleModal}
               style={styles.changeButton}
             >
-              <Text style={styles.changeText}>Change</Text>
+              <Text style={styles.changeText}>Сонгох </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.locationContainer}>
@@ -121,8 +142,6 @@ const CheckoutScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-
-      {/* Modal for displaying the address list */}
       <Modal
         visible={isModalVisible}
         transparent={true}
@@ -156,38 +175,21 @@ const CheckoutScreen = ({ navigation }) => {
           ))}
         </View>
         <View style={styles.listHeader}>
-          <Text style={styles.listHeaderTitle}>Онцгой </Text>
-          <Text style={styles.listHeaderSubtitle}>Бүгдийг харах </Text>
-        </View>
-        <View style={styles.amountContainer}>
-          <View style={styles.amountSubContainer}>
-            <Text style={styles.amountLabelText}>Item Total</Text>
-            <Text style={styles.amountText}>$ {totalAmount}</Text>
-          </View>
-          <View style={styles.amountSubContainer}>
-            <Text style={styles.amountLabelText}>Delivery Fee</Text>
-            <Text style={{ ...styles.amountText, color: Colors.DEFAULT_GREEN }}>
-              Free
-            </Text>
-          </View>
+          <Text style={styles.listHeaderTitle}>Төлбөр төлөх </Text>
+          <Text style={styles.listHeaderSubtitle}>Нэмэх </Text>
         </View>
         <View style={styles.foodList}>
           <Payment />
         </View>
         <View style={styles.totalContainer}>
-          <Text style={styles.totalText}>Total</Text>
-          <Text style={styles.totalText}>$ {totalAmount}</Text>
+          <Text style={styles.totalText}>Нийт үнэ </Text>
+          <Text style={styles.totalText}>₮ {totalAmount}</Text>
         </View>
-        <TouchableOpacity style={styles.checkoutButton}>
-          <View style={styles.rowAndCenter}>
-            <Ionicons
-              name="cart-outline"
-              color={Colors.DEFAULT_WHITE}
-              size={20}
-            />
-            <Text style={styles.checkoutText}>Confirm order</Text>
-          </View>
-          <Text style={styles.checkoutText}>$ {totalAmount}</Text>
+        <TouchableOpacity
+          style={styles.checkoutButton}
+          onPress={() => addToCart()}
+        >
+          <Text style={styles.checkoutText}>Төлбөр төлөх </Text>
         </TouchableOpacity>
         <Separator height={setHeight(9)} />
       </ScrollView>
@@ -219,7 +221,7 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontWeight: "bold",
-    fontFamily: Fonts.POPPINS_BOLD,
+    fontFamily: "Comfortaa-Bold",
     fontSize: 16,
     color: Colors.DEFAULT_BLACK,
   },
@@ -228,7 +230,7 @@ const styles = StyleSheet.create({
   },
   changeText: {
     fontWeight: "bold",
-    fontFamily: Fonts.POPPINS_REGULAR,
+    fontFamily: "Comfortaa-Bold",
     color: Colors.DEFAULT_YELLOW,
     fontSize: 16,
     lineHeight: 16 * 1.4,
@@ -287,7 +289,7 @@ const styles = StyleSheet.create({
   },
   headerTitle: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     width: setWidth(80),
     textAlign: "center",
@@ -317,14 +319,14 @@ const styles = StyleSheet.create({
     color: Colors.DEFAULT_BLACK,
     fontSize: 16,
     lineHeight: 16 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
   },
   listHeaderSubtitle: {
     color: Colors.DEFAULT_YELLOW,
     fontWeight: "bold",
-    fontSize: 13,
-    lineHeight: 13 * 1.4,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontSize: 14,
+    lineHeight: 14 * 1.4,
+    fontFamily: "Comfortaa-Bold",
   },
   rowAndCenter: {
     flexDirection: "row",
@@ -362,7 +364,7 @@ const styles = StyleSheet.create({
   },
   totalText: {
     fontSize: 20,
-    fontFamily: Fonts.POPPINS_SEMI_BOLD,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 20 * 1.4,
     color: Colors.DEFAULT_BLACK,
   },
@@ -372,7 +374,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.DEFAULT_GREEN,
     alignSelf: "center",
     paddingHorizontal: 20,
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
     height: setHeight(7),
@@ -380,7 +382,7 @@ const styles = StyleSheet.create({
   },
   checkoutText: {
     fontSize: 16,
-    fontFamily: Fonts.POPPINS_MEDIUM,
+    fontFamily: "Comfortaa-Bold",
     lineHeight: 16 * 1.4,
     color: Colors.DEFAULT_WHITE,
     marginLeft: 8,
