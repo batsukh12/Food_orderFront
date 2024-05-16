@@ -20,6 +20,7 @@ import {
   Categories,
   RestaurantCard,
   FavRestaurant,
+  RestaurantSearch,
 } from "../component";
 import LottieView from "lottie-react-native";
 import { restaurantService } from "../service";
@@ -39,6 +40,7 @@ const HomeScreen = ({ navigation }) => {
   const [activeSortItem, setActiveSortItem] = useState("recent");
   const [isLoading, setIsLoading] = useState(false);
   const [activeCategory, setActiveCategory] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const fetchRestaurants = useCallback(() => {
     setIsLoading(true);
@@ -59,7 +61,6 @@ const HomeScreen = ({ navigation }) => {
       )
     : restaurants;
   const [isBottomSheetVisible, setIsBottomSheetVisible] = useState(false);
-
   const openBottomSheet = () => {
     setIsBottomSheetVisible(true);
   };
@@ -117,12 +118,7 @@ const HomeScreen = ({ navigation }) => {
               visible={isBottomSheetVisible}
               onClose={closeBottomSheet}
             />
-            <View style={styles.searchContainer}>
-              <View style={styles.searchSections}>
-                <Feather name="search" size={25} color={Colors.DEFAULT_GREY} />
-              </View>
-              <TextInput placeholder="Хайх.." />
-            </View>
+            <RestaurantSearch style={styles.searchContainer} />
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={styles.categoriesContainer}
@@ -284,15 +280,7 @@ const styles = StyleSheet.create({
     lineHeight: 12 * 1.4,
   },
   searchContainer: {
-    backgroundColor: Colors.LIGHT_GREY,
-    borderWidth: 1,
-    borderColor: Colors.DEFAULT_GREY,
-    height: 45,
-    borderRadius: 8,
     marginHorizontal: 20,
-    marginTop: 20,
-    flexDirection: "row",
-    alignItems: "center",
   },
   searchSections: {
     marginLeft: 10,

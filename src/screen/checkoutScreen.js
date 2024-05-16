@@ -14,46 +14,58 @@ import {
 import { Colors, Fonts, image } from "../const";
 import { FoodCard, Separator, Payment } from "../component";
 import Ionicons from "react-native-vector-icons/Ionicons";
-import { cartService, imageService, StorageService } from "../service";
+import {
+  cartService,
+  imageService,
+  StorageService,
+  addressService,
+} from "../service";
 import { useSelector, useDispatch } from "react-redux";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
-const addressList = [
-  { id: "1", title: "Home", description: "Khan uul 21-r duureg" },
-  { id: "2", title: "Work", description: "Ikh delguur phantom" },
-  { id: "3", title: "School", description: "Bagshiin deed" },
-];
 const { height, width } = Dimensions.get("window");
 const setHeight = (h) => (height / 100) * h;
 const setWidth = (w) => (width / 100) * w;
-
 const CheckoutScreen = ({ navigation }) => {
   const [carts, setCarts] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
   const [isModalVisible, setIsModalVisible] = useState(false);
-  const [selectedAddress, setSelectedAddress] = useState(addressList[0]); // Initial value set to the first address
+  const [selectedAddress, setSelectedAddress] = useState(null); // Initialize with null
   const [user, setUser] = useState("");
+  const [addresses, setAddresses] = useState([]); // Renamed to 'addresses'
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
   };
 
+  useEffect(() => {
+    const fetchAddresses = async () => {
+      try {
+        const userId = await StorageService.getUser();
+        const response = await addressService.getAddress(userId);
+        if (response.status === true && response.data) {
+          setAddresses(response.data); // Update addresses state
+          setSelectedAddress(response.data[0]); // Set the first address as the default selected address
+        }
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+      }
+    };
+    fetchAddresses();
+  }, []);
   const handleAddressSelect = (address) => {
-    setSelectedAddress(address); // Update the selected address
-    setIsModalVisible(false); // Close the modal after selection
+    setSelectedAddress(address);
+    setIsModalVisible(false);
   };
+
   const fetchCart = useCallback(async () => {
     try {
       const cart = await AsyncStorage.getItem("carts");
       const userId = await StorageService.getUser();
       setUser(userId);
+
       if (cart) {
         const parsedCartItems = JSON.parse(cart);
-        const getCart = parsedCartItems.filter(
-          (cart) => cart.userId === userId
-        );
-
-        setCarts(getCart);
+        setCarts(parsedCartItems);
       }
     } catch (error) {
       console.error("Error while fetching cart:", error);
@@ -62,32 +74,25 @@ const CheckoutScreen = ({ navigation }) => {
 
   useEffect(() => {
     fetchCart();
-  }, []);
-  useEffect(() => {
-    const unsubscribe = navigation.addListener("focus", () => {
-      fetchCart();
-    });
+  }, [fetchCart]);
 
+  useEffect(() => {
+    const unsubscribe = navigation.addListener("focus", fetchCart);
     return unsubscribe;
-  }, []);
-  useEffect(() => {
-    const calculateTotalAmount = () => {
-      const total = carts.reduce(
-        (acc, curr) => acc + curr.price * curr.count,
-        0
-      );
-      setTotalAmount(total.toFixed(2));
-    };
+  }, [navigation, fetchCart]);
 
-    calculateTotalAmount();
-  }, [carts]);
+  const itemCount = useSelector((state) => state.cartState.cart || []);
+  const totalAmount = itemCount.reduce(
+    (acc, item) => acc + item.price * item.count,
+    0
+  );
 
   const addToCart = () => {
     if (!Array.isArray(carts) || carts.length === 0) {
       console.error("carts is not a valid array or is empty");
       return;
     }
-    const itemsArray = carts.map((cartItem) => ({
+    const itemsArray = itemCount.map((cartItem) => ({
       foodId: cartItem.id,
       image: cartItem.image,
       name: cartItem.name,
@@ -97,8 +102,8 @@ const CheckoutScreen = ({ navigation }) => {
     }));
     const userId = user;
 
-    cartService.addToCart({ items: itemsArray, userId: userId });
-    navigation.navigate("Deliver");
+    cartService.addToCart({ items: itemsArray, userId });
+    navigation.navigate("Deliver", { selectedAddress });
   };
 
   return (
@@ -124,7 +129,7 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={{ marginLeft: 10, flex: 1 }}>
           <View style={styles.titleContainer}>
             <Text numberOfLines={1} style={styles.titleText}>
-              Хүргэлтийн хаяг: {selectedAddress.title}
+              Хүргэлтийн хаяг: {selectedAddress?.name}
             </Text>
             <TouchableOpacity
               activeOpacity={0.8}
@@ -137,7 +142,7 @@ const CheckoutScreen = ({ navigation }) => {
           <View style={styles.locationContainer}>
             <Ionicons name="location" size={18} color={Colors.DEFAULT_BLACK} />
             <Text numberOfLines={2} style={styles.descriptionText}>
-              {selectedAddress.description}
+              {selectedAddress?.address}
             </Text>
           </View>
         </View>
@@ -150,17 +155,15 @@ const CheckoutScreen = ({ navigation }) => {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             <FlatList
-              data={addressList}
-              keyExtractor={(item) => item.id}
+              data={addresses}
+              keyExtractor={(item) => item._id}
               renderItem={({ item }) => (
                 <TouchableOpacity
                   style={styles.addressItem}
                   onPress={() => handleAddressSelect(item)}
                 >
-                  <Text style={styles.addressTitle}>{item.title}</Text>
-                  <Text style={styles.addressDescription}>
-                    {item.description}
-                  </Text>
+                  <Text style={styles.addressTitle}>{item.name}</Text>
+                  <Text style={styles.addressDescription}>{item.address}</Text>
                 </TouchableOpacity>
               )}
               style={styles.addressList}
@@ -170,7 +173,7 @@ const CheckoutScreen = ({ navigation }) => {
       </Modal>
       <ScrollView>
         <View style={styles.foodList}>
-          {carts.map((item) => (
+          {itemCount.map((item) => (
             <FoodCard {...item} key={item.id} />
           ))}
         </View>
@@ -185,10 +188,7 @@ const CheckoutScreen = ({ navigation }) => {
           <Text style={styles.totalText}>Нийт үнэ </Text>
           <Text style={styles.totalText}>₮ {totalAmount}</Text>
         </View>
-        <TouchableOpacity
-          style={styles.checkoutButton}
-          onPress={() => addToCart()}
-        >
+        <TouchableOpacity style={styles.checkoutButton} onPress={addToCart}>
           <Text style={styles.checkoutText}>Төлбөр төлөх </Text>
         </TouchableOpacity>
         <Separator height={setHeight(9)} />

@@ -14,13 +14,18 @@ import { Separator } from "../component";
 import Ionicons from "react-native-vector-icons/Ionicons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native-gesture-handler";
+import { useRoute } from "@react-navigation/native";
+import polyline from "@mapbox/polyline";
 
-const GOOGLE_MAPS_API_KEY = "YOUR_GOOGLE_MAPS_API_KEY";
+const GOOGLE_MAPS_API_KEY = "AIzaSyDAPJJOL7sl5vJKWfUf0RwWDHa3ODH85UA";
 
 const DeliveryScreen = ({ navigation }) => {
+  const route = useRoute();
+  const selectedAddress = route.params?.selectedAddress;
+
   const homeLocation = {
-    latitude: 47.915277,
-    longitude: 106.906291,
+    latitude: selectedAddress ? selectedAddress.latitude : 47.915277,
+    longitude: selectedAddress ? selectedAddress.longitude : 106.906291,
     latitudeDelta: 0.015,
     longitudeDelta: 0.0121,
   };
@@ -34,8 +39,9 @@ const DeliveryScreen = ({ navigation }) => {
 
   const [location, setLocation] = useState(homeLocation);
   const [routeCoordinates, setRouteCoordinates] = useState([]);
+  const [deliveryTime, setDeliveryTime] = useState(null);
+  const [distance, setDistance] = useState(null);
 
-  // Function to fetch route data from Google Directions API
   const fetchRoute = async () => {
     const origin = `${homeLocation.latitude},${homeLocation.longitude}`;
     const destination = `${restaurantLocation.latitude},${restaurantLocation.longitude}`;
@@ -46,19 +52,22 @@ const DeliveryScreen = ({ navigation }) => {
       const data = await response.json();
 
       if (data.routes && data.routes.length > 0) {
-        // Extract route points
         const points = data.routes[0].overview_polyline.points;
-        const decodedPolyline = MapView.Polyline.decodePath(points);
-
-        // Set route coordinates
+        const decodedPolyline = polyline.decode(points).map((point) => ({
+          latitude: point[0],
+          longitude: point[1],
+        }));
         setRouteCoordinates(decodedPolyline);
+
+        const route = data.routes[0].legs[0];
+        setDistance(route.distance.text);
+        setDeliveryTime(route.duration.text);
       }
     } catch (error) {
       console.error("Error fetching route data: ", error);
     }
   };
 
-  // Request location permission and update location tracking
   useEffect(() => {
     const requestLocationPermission = async () => {
       try {
@@ -75,8 +84,7 @@ const DeliveryScreen = ({ navigation }) => {
         );
 
         if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-          // Start watching user's location
-          Geolocation.watchPosition(
+          const watchId = Geolocation.watchPosition(
             (position) => {
               setLocation({
                 latitude: position.coords.latitude,
@@ -90,6 +98,10 @@ const DeliveryScreen = ({ navigation }) => {
             },
             { enableHighAccuracy: true, distanceFilter: 0 }
           );
+
+          return () => {
+            Geolocation.clearWatch(watchId);
+          };
         } else {
           console.log("Location permission denied");
         }
@@ -100,17 +112,12 @@ const DeliveryScreen = ({ navigation }) => {
 
     requestLocationPermission();
     fetchRoute(); // Fetch the route when the component mounts
-
-    return () => {
-      // Cleanup location tracking
-      Geolocation.clearWatch();
-    };
   }, []);
 
   return (
     <View style={styles.container}>
       <MapView style={styles.map} region={location}>
-        <Marker coordinate={location} title="Current Location" />
+        <Marker coordinate={location} title="Таны байгаа хаяг" />
         <Marker
           coordinate={homeLocation}
           title="Home Location"
@@ -118,15 +125,14 @@ const DeliveryScreen = ({ navigation }) => {
         />
         <Marker
           coordinate={restaurantLocation}
-          title="Nearest KFC"
+          title="Таны захиалга "
           pinColor="red"
         />
 
-        {/* Add a Polyline to show the route between home and restaurant locations */}
         <Polyline
           coordinates={routeCoordinates}
-          strokeColor={Colors.DEFAULT_BLACK} // Color of the line
-          strokeWidth={4} // Width of the line
+          strokeColor={Colors.DEFAULT_RED}
+          strokeWidth={4}
         />
       </MapView>
 
@@ -135,8 +141,12 @@ const DeliveryScreen = ({ navigation }) => {
 
         <View style={styles.descriptionContainer}>
           <View>
-            <Text style={styles.timeline}>20 - 30 минут </Text>
-            <Text style={styles.deliverDetails}>Таны захиалгыг таны гарт </Text>
+            <Text style={styles.timeline}>
+              {deliveryTime || "20 - 30 минут"}
+            </Text>
+            <Text style={styles.deliverDetails}>
+              {distance || "Таны захиалгыг таны гарт"}
+            </Text>
           </View>
           <Image source={image.deliver} style={styles.image} />
         </View>

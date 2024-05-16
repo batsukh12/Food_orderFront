@@ -18,4 +18,7 @@ export default {
   credit: require("../assets/images/cart.png"),
   qr: require("../assets/images/qr.png"),
   deliver: require("../assets/images/deliver.png"),
+  kfc: require("../assets/images/kfc.jpg"),
+  pizzahut: require("../assets/images/pizzahut.png"),
+  burgerking: require("../assets/images/burgerking.png"),
 };

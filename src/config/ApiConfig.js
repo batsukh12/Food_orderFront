@@ -7,6 +7,8 @@ const backend_api = {
   Food: "/food",
   Bookmark: "/bookmark",
   User: "/user",
+  Address: "/address",
+
   RefreshToken: "/refresh_token",
 };
 const const_image = {

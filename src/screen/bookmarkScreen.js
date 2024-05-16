@@ -48,7 +48,10 @@ const BookmarkScreen = ({ navigation }) => {
       console.error("Error while fetching bookmarks:", error);
     }
   }, []);
-
+  const itemCount = useSelector(
+    (state) => state?.bookmarkState?.bookmarks || 0
+  );
+  console.log(itemCount);
   useEffect(() => {
     fetchBookmarks();
   }, [fetchBookmarks]);
@@ -79,7 +82,7 @@ const BookmarkScreen = ({ navigation }) => {
       </View>
       <FlatList
         style={styles.bookmarkList}
-        data={bookmarks}
+        data={itemCount}
         keyExtractor={(item) => item?.restaurantId}
         showsVerticalScrollIndicator={false}
         ListHeaderComponent={() => <Separator height={10} />}

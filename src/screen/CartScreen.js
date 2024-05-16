@@ -25,7 +25,7 @@ const setWidth = (w) => (width / 100) * w;
 
 const CartScreen = ({ navigation }) => {
   const [carts, setCarts] = useState([]);
-  const [totalAmount, setTotalAmount] = useState(0);
+  //const [totalAmount, setTotalAmount] = useState(0);
 
   const fetchCart = useCallback(async () => {
     try {
@@ -34,17 +34,18 @@ const CartScreen = ({ navigation }) => {
 
       if (cart) {
         const parsedCartItems = JSON.parse(cart);
-        const getCart = parsedCartItems.filter(
-          (cart) => cart.userId === userId
-        );
+        // const getCart = parsedCartItems.filter(
+        //   (cart) => cart.userId === userId
+        // );
 
-        setCarts(getCart);
+        setCarts(parsedCartItems);
       }
     } catch (error) {
       console.error("Error while fetching cart:", error);
     }
   }, []);
-
+  const itemCount = useSelector((state) => state?.cartState?.cart || 0);
+  console.log(itemCount);
   useEffect(() => {
     fetchCart();
   }, []);
@@ -55,19 +56,9 @@ const CartScreen = ({ navigation }) => {
 
     return unsubscribe;
   }, [fetchCart]);
-  useEffect(() => {
-    // Calculate total amount based on the current state of the cart
-    const calculateTotalAmount = () => {
-      const total = carts.reduce(
-        (acc, curr) => acc + curr.price * curr.count,
-        0
-      );
-      setTotalAmount(total.toFixed(2));
-    };
-
-    // Call the function to calculate the total amount
-    calculateTotalAmount();
-  }, [carts]);
+  const totalAmount = itemCount.reduce((acc, item) => {
+    return acc + item.price * item.count;
+  }, 0);
 
   return (
     <View style={styles.container}>
@@ -85,10 +76,10 @@ const CartScreen = ({ navigation }) => {
         />
         <Text style={styles.headerTitle}>Сагс </Text>
       </View>
-      {carts.length > 0 ? (
+      {itemCount.length > 0 ? (
         <ScrollView>
           <View style={styles.foodList}>
-            {carts.map((item) => (
+            {itemCount.map((item) => (
               <FoodCard
                 {...item}
                 key={item.id}
@@ -164,7 +155,10 @@ const CartScreen = ({ navigation }) => {
           <Text style={styles.emptyCartSubText}>
             Явж, амттай хоол захиалаарай
           </Text>
-          <TouchableOpacity style={styles.addButtonEmpty}>
+          <TouchableOpacity
+            style={styles.addButtonEmpty}
+            onPress={() => navigation.navigate("HomeScreen")}
+          >
             <AntDesign name="plus" color={Colors.DEFAULT_WHITE} size={20} />
             <Text style={styles.addButtonEmptyText}>Захиалах</Text>
           </TouchableOpacity>

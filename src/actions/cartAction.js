@@ -4,8 +4,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 const types = {
   GET_CART_ITEMS: "GET_CART_ITEMS",
   SET_IS_LOADING: "SET_IS_LOADING",
+  CLEAR_CART: "CLEAR_CART",
 };
-
+const clearCart = () => {
+  return {
+    type: types.CLEAR_CART,
+  };
+};
 const addToCart = ({ userId, item }) => {
   return async (dispatch, getState) => {
     dispatch({
@@ -67,21 +72,16 @@ const removeFromCart = ({ foodId, userId }) => {
         (cartItem) => cartItem.id === foodId && cartItem.userId === userId
       );
 
-      // If the item exists in the cart, remove it
       if (itemIndex !== -1) {
         const item = cart[itemIndex];
         if (item.count > 1) {
-          // If count is greater than 1, decrease count by one
           item.count--;
         } else {
-          // If count is 1, remove the item from the cart array
           cart.splice(itemIndex, 1);
         }
 
-        // Save the updated cart to AsyncStorage
         await AsyncStorage.setItem("carts", JSON.stringify(cart));
 
-        // Dispatch the updated cart items to Redux store
         dispatch({
           type: types.GET_CART_ITEMS,
           payload: cart,
@@ -120,4 +120,4 @@ const getCartItems = () => {
   };
 };
 
-export default { types, addToCart, removeFromCart, getCartItems };
+export default { types, addToCart, removeFromCart, getCartItems, clearCart };

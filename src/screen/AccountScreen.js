@@ -80,7 +80,11 @@ const AccountScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.menuContainer}>
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("Order")}
+        >
           <View style={styles.menuIcon}>
             <MaterialCommunityIcons
               name="truck-fast-outline"

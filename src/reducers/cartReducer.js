@@ -10,6 +10,7 @@ export default (state = initialState, action) => {
       return { ...state, cart: action?.payload };
     case cartAction.types.SET_IS_LOADING:
       return { ...state, isLoading: action?.payload };
+
     default:
       return state;
   }

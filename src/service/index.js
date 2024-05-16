@@ -6,6 +6,7 @@ import cartService from "./cartService";
 import foodService from "./foodService";
 import bookmarkService from "./bookmarkService";
 import userService from "./userService";
+import addressService from "./addressService";
 export {
   authService,
   StorageService,
@@ -15,4 +16,5 @@ export {
   foodService,
   bookmarkService,
   userService,
+  addressService,
 };

@@ -4,12 +4,16 @@ import { getToken } from "../Store";
 
 const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
 
-const getCartItems = async () => {
+const getCartItems = async (userId) => {
+  console.log(userId);
   console.log(`CartService | getCartItems`);
   try {
     let response = await axios.get(
       `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Cart}`,
       {
+        params: {
+          userId: userId,
+        },
         headers: authHeader(getToken()),
       }
     );
@@ -34,7 +38,6 @@ const getCartItems = async () => {
 };
 
 const addToCart = async ({ items, userId }) => {
-  console.log(items, userId);
   console.log(`CartService | addToCart`);
   try {
     let response = await axios.post(
@@ -44,7 +47,6 @@ const addToCart = async ({ items, userId }) => {
         headers: authHeader(getToken()),
       }
     );
-    console.log(response?.data);
     if (response?.status === 200) {
       return {
         status: true,

@@ -4,61 +4,69 @@ import { getToken } from "../Store";
 
 const authHeader = (token) => ({ Authorization: `Bearer ${token}` });
 
-const getFoodById = async (foodId) => {
-  console.log(`CartService | getFood`);
+const getAddress = async (userId) => {
+  console.log(userId);
+  console.log(`AddressService | get`);
   try {
     let response = await axios.get(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Food}/${foodId}`,
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Address}`,
       {
+        params: {
+          userId: userId,
+        },
         headers: authHeader(getToken()),
       }
     );
     if (response?.status === 200) {
       return {
         status: true,
-        message: `food data fetched`,
+        message: `address data fetched`,
         data: response?.data?.data,
       };
     } else {
       return {
         status: false,
-        message: `food data not found`,
+        message: `address data not found`,
       };
     }
   } catch (error) {
     return {
       status: false,
-      message: `food data not found`,
-    };
-  }
-};
-const getFoods = async () => {
-  console.log(`CartService | getFood`);
-  try {
-    let response = await axios.get(
-      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Food}`,
-      {
-        headers: authHeader(getToken()),
-      }
-    );
-    if (response?.status === 200) {
-      return {
-        status: true,
-        message: `food data fetched`,
-        data: response?.data?.data,
-      };
-    } else {
-      return {
-        status: false,
-        message: `food data not found`,
-      };
-    }
-  } catch (error) {
-    return {
-      status: false,
-      message: `food data not found`,
+      message: `address data not found`,
     };
   }
 };
 
-export default { getFoodById, getFoods };
+const addAddress = async ({ address, userId }) => {
+  console.log(address);
+  console.log(`AddressService | add`);
+  try {
+    let response = await axios.post(
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Address}`,
+      { address, userId },
+      {
+        headers: authHeader(getToken()),
+      }
+    );
+    if (response?.status === 200) {
+      return {
+        status: true,
+        message: `Item added to address successfully`,
+        data: response?.data?.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: `Item added to address failed`,
+      };
+    }
+  } catch (error) {
+    console.log(error?.response);
+    return {
+      status: false,
+      message: `Item added to address failed`,
+    };
+  }
+};
+
+export default { getAddress, addAddress };
