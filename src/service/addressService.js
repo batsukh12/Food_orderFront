@@ -69,4 +69,35 @@ const addAddress = async ({ address, userId }) => {
   }
 };
 
-export default { getAddress, addAddress };
+const deleteAddress = async ({ addressId }) => {
+  console.log(addressId);
+  console.log(`AddressService | delete`);
+  try {
+    let response = await axios.delete(
+      `${ApiConfig.backend_api.baseUrl}${ApiConfig.backend_api.Address}/${addressId}`,
+      {
+        headers: authHeader(getToken()),
+      }
+    );
+    if (response?.status === 200) {
+      return {
+        status: true,
+        message: ` delete address successfully`,
+        data: response?.data?.data,
+      };
+    } else {
+      return {
+        status: false,
+        message: `Item delete to address failed`,
+      };
+    }
+  } catch (error) {
+    console.log(error?.response);
+    return {
+      status: false,
+      message: `Item delete to address failed`,
+    };
+  }
+};
+
+export default { getAddress, addAddress, deleteAddress };

@@ -94,7 +94,11 @@ const AccountScreen = ({ navigation }) => {
           </View>
           <Text style={styles.menuText}>Миний {"\n"}захиалга</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("Deliver")}
+        >
           <View
             style={{ ...styles.menuIcon, backgroundColor: Colors.LIGHT_RED }}
           >
@@ -106,7 +110,11 @@ const AccountScreen = ({ navigation }) => {
           </View>
           <Text style={styles.menuText}> Хөнгөлөлт {"\n"} урамшуулал </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.menuItem} activeOpacity={0.8}>
+        <TouchableOpacity
+          style={styles.menuItem}
+          activeOpacity={0.8}
+          onPress={() => navigation.navigate("Address")}
+        >
           <View
             style={{ ...styles.menuIcon, backgroundColor: Colors.LIGHT_YELLOW }}
           >
